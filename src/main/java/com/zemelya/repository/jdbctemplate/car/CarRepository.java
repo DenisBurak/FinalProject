@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -121,7 +122,7 @@ public class CarRepository implements CarRepositoryInterface {
 
   @Override
   public Long delete(Long id) {
-    jdbcTemplate.update("delete from rentalcars.cars where id = " + id);
+    jdbcTemplate.update("delete from rentalcars.cars where id = ?", new Object[] { id });
     return id;
   }
 
@@ -147,8 +148,8 @@ public class CarRepository implements CarRepositoryInterface {
 
     return jdbcTemplate.queryForList(query);
   }
-
-  public List<Map<String, Object>> getListOfAvailableCars() {
+@Override
+  public List<Map<String, Object>> getListOfAvailableCars(Timestamp date) {
     final String query =
         "select "
             + "car.id,\n"
@@ -167,9 +168,10 @@ public class CarRepository implements CarRepositoryInterface {
             + "            on model.body_type_id = body.id "
             + "left join rentalcars.rental_agreements AS ra "
             + "    on car.id = ra.car_id "
+            + "    and ra.rental_start_date <= ? and ra.expiration_date >= ?"
             + "where car.is_available "
-            + "and (ra.car_id is null or ra.rental_start_date > current_date or ra.expiration_date < current_date)";
+            + "and ra.car_id is null";
 
-    return jdbcTemplate.queryForList(query);
+    return jdbcTemplate.queryForList(query, new Object[] { date, date });
   }
 }

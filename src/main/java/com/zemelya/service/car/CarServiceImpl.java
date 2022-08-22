@@ -5,6 +5,7 @@ import com.zemelya.repository.jdbctemplate.car.CarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -55,8 +56,8 @@ public class CarServiceImpl implements CarService {
         return carRepository.getListOfCars();
     }
 
-    public List<Map<String, Object>> getListOfAvailableCars()
+    public List<Map<String, Object>> getListOfAvailableCars(Timestamp date)
     {
-        return carRepository.getListOfAvailableCars();
+        return carRepository.getListOfAvailableCars(date);
     };
 }

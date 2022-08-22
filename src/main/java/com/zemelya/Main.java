@@ -67,26 +67,28 @@ public class Main {
 //    drivingLisenceService.delete(6l);
 
     CarService carService = annotationConfigApplicationContext.getBean(CarService.class);
-//
+
 //    Car car = new Car();
-//    car.setModelId(1);
-//    car.setVolume(2.2D);
-//    car.setVinNumber("123123DDD234545DFFG12");
+//    car.setModelId(10);
+//    car.setVolume(2.7D);
+//    car.setVinNumber("456456HHH456456DDDDD54");
 //    car.setIsAvailable(true);
 //    car.setCreationDate(new Timestamp(new Date().getTime()));
 //    car.setModificationDate(new Timestamp(new Date().getTime()));
-//    car.setPrice(37.50D);
+//    car.setPrice(660.50D);
 //
 //    System.out.println(car);
 //
 //    Car car1 = carService.create(car);
 //    System.out.println(car1);
 
+//    carService.delete(31l);
+
 //    List<Map<String, Object>> stringObjectList = carService.getListOfCars();
 //    stringObjectList.forEach(System.out::println);
 
-    List<Map<String, Object>> listOfAvailableCars = carService.getListOfAvailableCars();
-    listOfAvailableCars.forEach(System.out::println);
+//    List<Map<String, Object>> listOfAvailableCars = carService.getListOfAvailableCars(new Timestamp(new Date().getTime()));
+//    listOfAvailableCars.forEach(System.out::println);
 
   }
 }
