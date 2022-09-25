@@ -1,6 +1,5 @@
 package com.zemelya.service.car;
 
-import com.zemelya.domain.Car;
 import com.zemelya.repository.jdbctemplate.car.CarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

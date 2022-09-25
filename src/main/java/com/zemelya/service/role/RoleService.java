@@ -1,7 +1,5 @@
 package com.zemelya.service.role;
 
-import com.zemelya.domain.Role;
-
 import java.util.List;
 import java.util.Optional;
 

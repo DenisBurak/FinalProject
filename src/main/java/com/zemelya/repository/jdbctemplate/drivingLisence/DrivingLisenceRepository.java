@@ -1,6 +1,5 @@
 package com.zemelya.repository.jdbctemplate.drivingLisence;
 
-import com.zemelya.domain.DrivingLisence;
 import com.zemelya.repository.drivingLisences.DrivingLisenceRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;

@@ -1,7 +1,5 @@
 package com.zemelya.service.user;
 
-import com.zemelya.domain.User;
-
 import java.util.List;
 import java.util.Optional;
 

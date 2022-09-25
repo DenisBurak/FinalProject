@@ -1,6 +1,5 @@
 package com.zemelya.repository.jdbctemplate.drivingLisence;
 
-import com.zemelya.domain.DrivingLisence;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

@@ -1,16 +1,8 @@
 package com.zemelya;
 
-import com.zemelya.domain.Car;
-import com.zemelya.domain.DrivingLisence;
 import com.zemelya.service.car.CarService;
-import com.zemelya.service.drivingLisence.DrivingLisenceService;
 import com.zemelya.service.user.UserService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 public class Main {
   public static void main(String[] args) {

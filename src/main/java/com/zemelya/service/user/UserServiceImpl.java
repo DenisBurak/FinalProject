@@ -1,6 +1,5 @@
 package com.zemelya.service.user;
 
-import com.zemelya.domain.User;
 import com.zemelya.repository.user.UserRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

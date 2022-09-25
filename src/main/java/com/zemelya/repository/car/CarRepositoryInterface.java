@@ -1,6 +1,5 @@
 package com.zemelya.repository.car;
 
-import com.zemelya.domain.Car;
 import com.zemelya.repository.CRUDRepository;
 
 import java.sql.Timestamp;

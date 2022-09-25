@@ -1,6 +1,5 @@
 package com.zemelya.repository.jdbctemplate.role;
 
-import com.zemelya.domain.Role;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

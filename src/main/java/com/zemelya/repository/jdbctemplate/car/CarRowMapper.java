@@ -1,6 +1,5 @@
 package com.zemelya.repository.jdbctemplate.car;
 
-import com.zemelya.domain.Car;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

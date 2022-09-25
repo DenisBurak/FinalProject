@@ -1,7 +1,5 @@
 package com.zemelya.service.drivingLisence;
 
-import com.zemelya.domain.DrivingLisence;
-
 import java.util.List;
 import java.util.Optional;
 

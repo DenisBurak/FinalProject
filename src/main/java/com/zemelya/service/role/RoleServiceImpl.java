@@ -1,6 +1,5 @@
 package com.zemelya.service.role;
 
-import com.zemelya.domain.Role;
 import com.zemelya.repository.role.RoleRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

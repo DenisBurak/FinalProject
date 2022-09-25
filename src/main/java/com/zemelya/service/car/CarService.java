@@ -1,7 +1,5 @@
 package com.zemelya.service.car;
 
-import com.zemelya.domain.Car;
-
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;

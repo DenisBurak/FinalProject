@@ -1,6 +1,5 @@
 package com.zemelya.service.drivingLisence;
 
-import com.zemelya.domain.DrivingLisence;
 import com.zemelya.repository.jdbctemplate.drivingLisence.DrivingLisenceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

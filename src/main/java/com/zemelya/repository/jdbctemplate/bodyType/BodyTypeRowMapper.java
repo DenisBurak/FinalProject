@@ -1,6 +1,5 @@
 package com.zemelya.repository.jdbctemplate.bodyType;
 
-import com.zemelya.domain.BodyType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

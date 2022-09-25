@@ -1,6 +1,5 @@
 package com.zemelya.repository.jdbctemplate.brand;
 
-import com.zemelya.domain.Brand;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

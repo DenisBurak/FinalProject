@@ -1,6 +1,5 @@
 package com.zemelya.repository.jdbctemplate.car;
 
-import com.zemelya.domain.Car;
 import com.zemelya.repository.car.CarRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;

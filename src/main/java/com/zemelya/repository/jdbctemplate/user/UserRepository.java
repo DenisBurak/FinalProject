@@ -1,6 +1,5 @@
 package com.zemelya.repository.jdbctemplate.user;
 
-import com.zemelya.domain.User;
 import com.zemelya.repository.user.UserRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;

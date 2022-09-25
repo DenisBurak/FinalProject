@@ -1,6 +1,5 @@
 package com.zemelya.repository.jdbctemplate.rentalAgreement;
 
-import com.zemelya.domain.RentalAgreement;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
