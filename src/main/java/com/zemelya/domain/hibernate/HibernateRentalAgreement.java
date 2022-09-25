@@ -22,12 +22,6 @@ public class HibernateRentalAgreement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
-    private Integer userId;
-
-    @Column(name = "car_id")
-    private Long carId;
-
     @Column(name = "rental_start_date")
     private Timestamp rentalStartDate;
 

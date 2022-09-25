@@ -19,10 +19,10 @@ spring:
     password: 123
     url: "jdbc:postgresql://localhost:5432/projectBase"
 server:
-  port: 8080
+  port: 8082
 
 ---
 
-jwt:
-  secret: qwepuisdhfaksdjflsdfn12321___**
-  expiration: 60000
+#jwt:
+#  secret: qwepuisdhfaksdjflsdfn12321___**
+#  expiration: 60000

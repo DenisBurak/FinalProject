@@ -14,6 +14,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class SpringBootStarter {
 
     public static void main(String[] args) {
-        SpringApplication.run(com.zemelya.SpringBootStarter.class, args);
+        SpringApplication.run(SpringBootStarter.class, args);
     }
 }
