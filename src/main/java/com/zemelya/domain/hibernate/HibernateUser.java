@@ -23,7 +23,7 @@ import java.util.Set;
 @Data
 @Entity
 @EqualsAndHashCode(exclude = {
-        "roles", "orders, drivingLicenses, rentalAgreements"
+        "roles", "drivingLicense", "rentalAgreements"
 })
 @Table(name = "users")
 public class HibernateUser {

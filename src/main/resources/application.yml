@@ -23,6 +23,6 @@ server:
 
 ---
 
-#jwt:
-#  secret: qwepuisdhfaksdjflsdfn12321___**
-#  expiration: 60000
+jwt:
+  secret: qwepuisdhfaksdjflsdfn747477_____**
+  expiration: 60000
