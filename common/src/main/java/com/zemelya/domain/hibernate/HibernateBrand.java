@@ -3,6 +3,8 @@ package com.zemelya.domain.hibernate;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.springframework.cache.annotation.Cacheable;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,7 +22,11 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {
         "models"
 })
+@ToString(exclude = {
+        "models"
+})
 @Table(name = "brands")
+@Cacheable("brands")
 public class HibernateBrand {
 
     @Id

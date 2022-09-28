@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,6 +23,9 @@ import java.util.Set;
 @Data
 @Entity
 @EqualsAndHashCode(exclude = {
+        "cars"
+})
+@ToString(exclude = {
         "cars"
 })
 @Table(name = "models")

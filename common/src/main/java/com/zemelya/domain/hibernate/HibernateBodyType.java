@@ -3,8 +3,7 @@ package com.zemelya.domain.hibernate;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,6 +19,9 @@ import java.util.Set;
 @Data
 @Entity
 @EqualsAndHashCode(exclude = {
+        "models"
+})
+@ToString(exclude = {
         "models"
 })
 @Table(name = "body_types")

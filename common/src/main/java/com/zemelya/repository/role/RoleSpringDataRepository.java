@@ -1,6 +1,7 @@
 package com.zemelya.repository.role;
 
 import com.zemelya.domain.hibernate.HibernateRole;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -12,7 +13,6 @@ public interface RoleSpringDataRepository extends CrudRepository<HibernateRole, 
         JpaRepository<HibernateRole, Integer>,
         PagingAndSortingRepository<HibernateRole, Integer> {
 
-
 //    List<HibernateRole> findByUserId(Long UserId);
     @Query(value = "select * from rentalcars.roles " +
             "inner join rentalcars.l_role_user " +
@@ -20,4 +20,8 @@ public interface RoleSpringDataRepository extends CrudRepository<HibernateRole, 
             "where rentalcars.l_role_user.user_id = :userId"
             , nativeQuery = true)
     List<HibernateRole> findByUserId(Long userId);
+
+    @Cacheable("roles")
+    @Query(value = "select r from HibernateRole r")
+    List<HibernateRole> findAllCustom();
 }
