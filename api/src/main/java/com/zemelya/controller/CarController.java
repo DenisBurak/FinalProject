@@ -1,7 +1,6 @@
 package com.zemelya.controller;
 
-import com.zemelya.repository.brand.BrandSpringDataRepository;
-import com.zemelya.repository.role.RoleSpringDataRepository;
+import com.zemelya.repository.car.CarSpringDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +12,13 @@ import java.util.Collections;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/rest/data/brands")
-public class BrandController {
+@RequestMapping("/rest/data/cars")
+public class CarController {
 
-    private final BrandSpringDataRepository repository;
+    private final CarSpringDataRepository repository;
 
     @GetMapping("/showAll")
-    public ResponseEntity<Object> findAllBodyTypes() {
+    public ResponseEntity<Object> findAll() {
 
         return new ResponseEntity<>(
                 Collections.singletonMap("result", repository.findAll()),

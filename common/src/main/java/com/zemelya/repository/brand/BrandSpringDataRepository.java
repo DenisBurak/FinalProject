@@ -9,9 +9,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 
-public interface BrandSpringDataRepository extends CrudRepository<HibernateBrand, Integer>,
-        JpaRepository<HibernateBrand, Integer>,
-        PagingAndSortingRepository<HibernateBrand, Integer> {
+public interface BrandSpringDataRepository extends JpaRepository<HibernateBrand, Integer> {
 
     @Cacheable("brands")
 //    @Query(value = "select b from HibernateBrand b")

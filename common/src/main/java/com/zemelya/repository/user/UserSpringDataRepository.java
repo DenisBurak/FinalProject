@@ -4,18 +4,13 @@ import com.zemelya.domain.hibernate.HibernateUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserSpringDataRepository
-    extends CrudRepository<HibernateUser, Long>,
-        JpaRepository<HibernateUser, Long>,
-        PagingAndSortingRepository<HibernateUser, Long> {
+public interface UserSpringDataRepository extends JpaRepository<HibernateUser, Long> {
 
   Optional<HibernateUser> findByUserLogin(String login);
 

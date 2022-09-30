@@ -19,7 +19,7 @@ spring:
     password: 123
     url: "jdbc:postgresql://localhost:5432/projectBase"
 server:
-  port: 8082
+  port: 8085
 
 ---
 

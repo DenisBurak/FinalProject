@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.springframework.cache.annotation.Cacheable;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,6 +25,7 @@ import java.util.Set;
 @ToString(exclude = {
         "models"
 })
+@Cacheable("bodyTypes")
 @Table(name = "body_types")
 public class HibernateBodyType {
 

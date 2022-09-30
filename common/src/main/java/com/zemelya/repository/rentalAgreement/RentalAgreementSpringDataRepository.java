@@ -1,11 +1,17 @@
 package com.zemelya.repository.rentalAgreement;
 
+import com.zemelya.domain.hibernate.HibernateBodyType;
 import com.zemelya.domain.hibernate.HibernateRentalAgreement;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.Query;
 
-public interface RentalAgreementSpringDataRepository extends CrudRepository<HibernateRentalAgreement, Long>,
-        JpaRepository<HibernateRentalAgreement, Long>,
-        PagingAndSortingRepository<HibernateRentalAgreement, Long> {
+import java.util.List;
+
+public interface RentalAgreementSpringDataRepository extends JpaRepository<HibernateRentalAgreement, Long> {
+
+    @Query(
+            value =
+                    "select * from rentalcars.rental_agreements",
+            nativeQuery = true)
+    List<HibernateRentalAgreement> findAllInfo();
 }

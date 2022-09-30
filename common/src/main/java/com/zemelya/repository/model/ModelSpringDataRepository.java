@@ -1,9 +1,7 @@
 package com.zemelya.repository.model;
 
 import com.zemelya.domain.hibernate.HibernateModel;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ModelSpringDataRepository extends CrudRepository<HibernateModel, Integer>,
-        PagingAndSortingRepository<HibernateModel, Integer> {
+public interface ModelSpringDataRepository extends JpaRepository<HibernateModel, Integer> {
 }
