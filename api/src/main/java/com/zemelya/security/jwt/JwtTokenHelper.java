@@ -35,6 +35,14 @@ public class JwtTokenHelper {
 
     private final JwtSecurityConfig jwtTokenConfig;
 
+    public String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(SUBJECT, userDetails.getUsername());
+        claims.put(CREATE_VALUE, generateCurrentDate());
+        claims.put(ROLES, getEncryptedRoles(userDetails));
+        return generateToken(claims);
+    }
+
     private String generateToken(Map<String, Object> claims) {
 
         return Jwts
@@ -94,14 +102,6 @@ public class JwtTokenHelper {
 
     private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
         return (lastPasswordReset != null && created.before(lastPasswordReset));
-    }
-
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(SUBJECT, userDetails.getUsername());
-        claims.put(CREATE_VALUE, generateCurrentDate());
-        claims.put(ROLES, getEncryptedRoles(userDetails));
-        return generateToken(claims);
     }
 
     private List<String> getEncryptedRoles(UserDetails userDetails) {

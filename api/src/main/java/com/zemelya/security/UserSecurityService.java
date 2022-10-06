@@ -27,7 +27,7 @@ public class UserSecurityService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
             /*Find user in DB*/
-            Optional<HibernateUser> searchResult = userRepository.findByUserLogin(username);
+            Optional<HibernateUser> searchResult = userRepository.findByCredentialsLogin(username);
 
             if (searchResult.isPresent()) {
                 HibernateUser user = searchResult.get();
@@ -35,8 +35,8 @@ public class UserSecurityService implements UserDetailsService {
                 /*We are creating Spring Security User object*/
 
                 return new org.springframework.security.core.userdetails.User(
-                        user.getUserLogin(),
-                        user.getUserPassword(),
+                        user.getCredentials().getLogin(),
+                        user.getCredentials().getPassword(),
 //                        ["ROLE_USER", "ROLE_ADMIN"]
                         AuthorityUtils.commaSeparatedStringToAuthorityList(
                                 roleRepository.findByUserId(user.getId())

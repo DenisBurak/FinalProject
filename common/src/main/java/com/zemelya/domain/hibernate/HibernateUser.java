@@ -3,12 +3,16 @@ package com.zemelya.domain.hibernate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.zemelya.domain.Credentials;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -57,12 +61,19 @@ public class HibernateUser {
     @JsonIgnore
     private Timestamp modificationDate;
 
-    @Column(name = "login")
-    private String userLogin;
+//    @Column(name = "login")
+//    private String userLogin;
+//
+//    @Column(name = "password")
+//    @JsonIgnore
+//    private String userPassword;
 
-    @Column(name = "password")
-    @JsonIgnore
-    private String userPassword;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "login", column = @Column(name = "login")),
+            @AttributeOverride(name = "password", column = @Column(name = "password"))
+    })
+    private Credentials credentials;
 
     @Column(name = "email")
     private String email;
