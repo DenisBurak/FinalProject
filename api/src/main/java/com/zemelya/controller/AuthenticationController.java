@@ -1,7 +1,7 @@
 package com.zemelya.controller;
 
 import com.zemelya.controller.requests.AuthRequest;
-import com.zemelya.controller.requests.AuthResponse;
+import com.zemelya.controller.responces.AuthResponse;
 import com.zemelya.security.jwt.JwtTokenHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -28,11 +28,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenHelper tokenUtils;
 
-    @Autowired
-    public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder, PasswordEncoder passwordEncoder) throws Exception {
+    private final NoOpPasswordEncoder noOpPasswordEncoder;
+
+    @Autowired  //, PasswordEncoder passwordEncoder
+    public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
                 .userDetailsService(userProvider)
-                .passwordEncoder(passwordEncoder);
+                .passwordEncoder(noOpPasswordEncoder);
     }
 
 //    @Bean
