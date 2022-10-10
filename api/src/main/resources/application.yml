@@ -26,3 +26,9 @@ server:
 jwt:
   secret: qwepuisdhfaksdjflsdfn747477_____**
   expiration: 60000
+
+#---
+#
+#springdoc:
+#  swagger-ui:
+#    default-models-expand-depth: -1

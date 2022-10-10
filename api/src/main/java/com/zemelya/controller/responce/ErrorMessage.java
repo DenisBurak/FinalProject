@@ -1,4 +1,4 @@
-package com.zemelya.controller.responces;
+package com.zemelya.controller.responce;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

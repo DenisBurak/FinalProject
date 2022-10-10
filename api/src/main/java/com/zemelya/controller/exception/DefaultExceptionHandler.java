@@ -1,6 +1,6 @@
 package com.zemelya.controller.exception;
 
-import com.zemelya.controller.responces.ErrorMessage;
+import com.zemelya.controller.responce.ErrorMessage;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

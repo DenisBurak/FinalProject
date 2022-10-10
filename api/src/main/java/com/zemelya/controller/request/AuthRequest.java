@@ -1,4 +1,4 @@
-package com.zemelya.controller.requests;
+package com.zemelya.controller.request;
 
 import lombok.Data;
 

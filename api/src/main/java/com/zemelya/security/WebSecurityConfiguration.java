@@ -33,6 +33,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired  //, PasswordEncoder passwordEncoder
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
+                //.eraseCredentials(true)
                 .userDetailsService(userProvider)
                 .passwordEncoder(noOpPasswordEncoder);
     }
@@ -55,6 +56,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf()
                 .disable()
+                .cors()
+                .disable()
+                .headers()
+                .frameOptions()
+                .disable()
+                .and()
                 .exceptionHandling()
                 .and()
                 .sessionManagement()
@@ -62,9 +69,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 /*For swagger access only*/
-//                .antMatchers("/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui.html", "/webjars/**").permitAll()
-//                .antMatchers("/actuator/**").permitAll()
-//                .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()
+                .antMatchers("/swagger.json", "/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui.html", "/webjars/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/guest/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
@@ -72,8 +79,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/rest/**").permitAll()
                 .antMatchers("/admin/**").hasAnyRole("ADMIN", "MODERATOR")
-                .anyRequest()
-                .authenticated();
+                //.anyRequest()
+                //.authenticated()
+                .and()
+                .httpBasic();
 
         // Custom JWT based authentication
 //        httpSecurity
@@ -81,15 +90,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     //For swagger access only
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web.ignoring()
-//                .antMatchers(
-//                        "/v2/api-docs",
-//                        "/configuration/ui/**",
-//                        "/swagger-resources/**",
-//                        "/configuration/security/**",
-//                        "/swagger-ui.html",
-//                        "/webjars/**");
-//    }
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers(
+                        "/v2/api-docs",
+                        "/configuration/ui/**",
+                        "/swagger-resources/**",
+                        "/configuration/security/**",
+                        "/swagger-ui.html",
+                        "/webjars/**",
+                        "/swagger.json");
+    }
 }
