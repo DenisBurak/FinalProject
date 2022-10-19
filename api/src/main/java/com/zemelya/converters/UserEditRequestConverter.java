@@ -1,4 +1,4 @@
-package com.zemelya.converter;
+package com.zemelya.converters;
 
 import com.zemelya.controller.request.UserChangeRequest;
 import com.zemelya.domain.hibernate.HibernateUser;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserEditRequestConverter extends EntityConverter<UserChangeRequest, HibernateUser> {
 
-    private UserSpringDataRepository userRepository;
+    private final UserSpringDataRepository userRepository;
 
     public UserEditRequestConverter(UserSpringDataRepository userRepository) {
         this.userRepository = userRepository;

@@ -1,4 +1,4 @@
-package com.zemelya.converter;
+package com.zemelya.converters;
 
 import com.zemelya.controller.request.UserCreateRequest;
 import com.zemelya.domain.Credentials;
@@ -16,15 +16,9 @@ public abstract class EntityConverter<S, T> implements Converter<S, T> {
         user.setBirth(request.getBirthDate());
         user.setEmail(request.getEmail());
 
-        Credentials credentials = new Credentials();
-        credentials.setLogin(request.getLogin());
-        credentials.setPassword(request.getPassword());
-
-        user.setCredentials(credentials);
-
+        /*System fields filling*/
         user.setModificationDate(new Timestamp(new Date().getTime()));
-
-
+        user.setIsDeleted(false);
 
         return user;
     }

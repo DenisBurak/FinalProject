@@ -61,14 +61,8 @@ public class HibernateUser {
     @JsonIgnore
     private Timestamp modificationDate;
 
-//    @Column(name = "login")
-//    private String userLogin;
-//
-//    @Column(name = "password")
-//    @JsonIgnore
-//    private String userPassword;
-
     @Embedded
+    @JsonIgnore
     @AttributeOverrides({
             @AttributeOverride(name = "login", column = @Column(name = "login")),
             @AttributeOverride(name = "password", column = @Column(name = "password"))

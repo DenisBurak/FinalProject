@@ -1,5 +1,6 @@
 package com.zemelya.security;
 
+import com.zemelya.security.filter.AuthenticationTokenFilter;
 import com.zemelya.security.jwt.JwtTokenHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @Configuration
@@ -37,13 +39,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .userDetailsService(userProvider)
                 .passwordEncoder(noOpPasswordEncoder);
     }
-
-//    @Bean
-//    public AuthenticationTokenFilter authenticationTokenFilterBean(AuthenticationManager authenticationManager) throws Exception {
-//        AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(tokenUtils, userDetailsService);
-//        authenticationTokenFilter.setAuthenticationManager(authenticationManager);
-//        return authenticationTokenFilter;
-//    }
 
     @Bean
     @Override
@@ -69,7 +64,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 /*For swagger access only*/
-                .antMatchers("/swagger.json", "/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui.html", "/webjars/**").permitAll()
+                .antMatchers("/swagger.json", "/v3/api-docs/**", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui/**", "/webjars/**").permitAll()
                 .antMatchers("/actuator/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -79,14 +74,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/rest/**").permitAll()
                 .antMatchers("/admin/**").hasAnyRole("ADMIN", "MODERATOR")
-                //.anyRequest()
-                //.authenticated()
-                .and()
-                .httpBasic();
+                .anyRequest()
+                .authenticated();
 
         // Custom JWT based authentication
-//        httpSecurity
-//                .addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity
+                .addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    public AuthenticationTokenFilter authenticationTokenFilterBean(AuthenticationManager authenticationManager) throws Exception {
+        AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(tokenUtils, userProvider);
+        authenticationTokenFilter.setAuthenticationManager(authenticationManager);
+        return authenticationTokenFilter;
     }
 
     //For swagger access only
@@ -94,11 +94,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers(
-                        "/v2/api-docs",
+                        "/v3/api-docs/**",
                         "/configuration/ui/**",
                         "/swagger-resources/**",
                         "/configuration/security/**",
-                        "/swagger-ui.html",
+                        "/swagger-ui/**",
                         "/webjars/**",
                         "/swagger.json");
     }

@@ -1,8 +1,7 @@
-package com.zemelya.converter;
+package com.zemelya.converters;
 
 import com.zemelya.controller.request.UserCreateRequest;
-import com.zemelya.domain.SystemRoles;
-import com.zemelya.domain.hibernate.HibernateRole;
+import com.zemelya.domain.Credentials;
 import com.zemelya.domain.hibernate.HibernateUser;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +15,14 @@ public class UserCreateRequestConverter extends EntityConverter<UserCreateReques
     public HibernateUser convert(UserCreateRequest request) {
 
         HibernateUser user = new HibernateUser();
+
         user.setCreationDate(new Timestamp(new Date().getTime()));
-        user.setModificationDate(new Timestamp(new Date().getTime()));
+
+        Credentials credentials = new Credentials();
+        credentials.setLogin(request.getLogin());
+        credentials.setPassword(request.getPassword());
+
+        user.setCredentials(credentials);
 
 //        HibernateRole hibernateRole = new HibernateRole();
 //        hibernateRole.setRoleName(SystemRoles.ROLE_USER);
