@@ -2,7 +2,7 @@ package com.zemelya.converters;
 
 import com.zemelya.controller.request.UserChangeRequest;
 import com.zemelya.domain.hibernate.HibernateUser;
-import com.zemelya.exception.EntityNotFoundException;
+import javax.persistence.EntityNotFoundException;
 import com.zemelya.repository.user.UserSpringDataRepository;
 import org.springframework.stereotype.Component;
 

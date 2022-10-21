@@ -3,13 +3,18 @@ package com.zemelya.converters;
 import com.zemelya.controller.request.UserCreateRequest;
 import com.zemelya.domain.Credentials;
 import com.zemelya.domain.hibernate.HibernateUser;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public class UserCreateRequestConverter extends EntityConverter<UserCreateRequest, HibernateUser> {
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public HibernateUser convert(UserCreateRequest request) {
@@ -18,16 +23,12 @@ public class UserCreateRequestConverter extends EntityConverter<UserCreateReques
 
         user.setCreationDate(new Timestamp(new Date().getTime()));
 
-        Credentials credentials = new Credentials();
-        credentials.setLogin(request.getLogin());
-        credentials.setPassword(request.getPassword());
+        Credentials credentials = new Credentials(
+                request.getLogin(),
+                passwordEncoder.encode(request.getPassword())
+        );
 
         user.setCredentials(credentials);
-
-//        HibernateRole hibernateRole = new HibernateRole();
-//        hibernateRole.setRoleName(SystemRoles.ROLE_USER);
-//        hibernateRole.setUser(user);
-//        user.setRole(hibernateRole);
 
         return doConvert(user, request);
     }

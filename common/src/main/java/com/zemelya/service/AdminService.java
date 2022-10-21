@@ -3,6 +3,7 @@ package com.zemelya.service;
 import com.zemelya.domain.hibernate.HibernateRole;
 import com.zemelya.domain.hibernate.HibernateUser;
 import com.zemelya.repository.role.RoleSpringDataRepository;
+import com.zemelya.repository.user.UserSpringDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -14,9 +15,11 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AdminService {
 
+    public final UserSpringDataRepository userSpringDataRepository;
+
     public final RoleSpringDataRepository roleSpringDataRepository;
 
-    public HibernateUser setRoles(HibernateUser user){
+    public HibernateUser setRoles(HibernateUser user, Integer roleId){
 
         Set<HibernateRole> roles = user.getRoles();
 
@@ -25,7 +28,7 @@ public class AdminService {
         if (!CollectionUtils.isEmpty(roles)) {
             updatedRoles.addAll(roles);
         }
-        updatedRoles.add(roleSpringDataRepository.findById(2).get());
+        updatedRoles.add(roleSpringDataRepository.findById(roleId).get());
 
         user.setRoles(updatedRoles);
 

@@ -17,7 +17,6 @@ public class OpenAPIConfig {
     private Info apiInfo() {
         return new Info()
                 .title("Rental car API")
-                .description("API for working with something")
                 .version("2.0")
                 .contact(apiContact());
     }
