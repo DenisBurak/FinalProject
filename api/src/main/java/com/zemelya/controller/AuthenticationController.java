@@ -3,6 +3,7 @@ package com.zemelya.controller;
 import com.zemelya.controller.request.AuthRequest;
 import com.zemelya.controller.responce.AuthResponse;
 import com.zemelya.security.jwt.JwtTokenHelper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Authentication controller")
 @RequiredArgsConstructor
 public class AuthenticationController {
   private final AuthenticationManager authenticationManager;

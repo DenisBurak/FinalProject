@@ -7,8 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-@Schema(description = "FFFFFFF", hidden = true)
-
+@Schema(description = "Returns generated token and user name")
 public class AuthResponse {
 
     private String token;
