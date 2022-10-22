@@ -1,6 +1,6 @@
-package com.zemelya.converters;
+package com.zemelya.converters.user;
 
-import com.zemelya.controller.request.UserCreateRequest;
+import com.zemelya.controller.request.user.UserCreateRequest;
 import com.zemelya.domain.Credentials;
 import com.zemelya.domain.hibernate.HibernateUser;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
-public class UserCreateRequestConverter extends EntityConverter<UserCreateRequest, HibernateUser> {
+public class UserCreateRequestConverter extends UserBaseConverter<UserCreateRequest, HibernateUser> {
 
     private final PasswordEncoder passwordEncoder;
 

@@ -1,5 +1,6 @@
 package com.zemelya.domain.hibernate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zemelya.domain.SystemRoles;
 import lombok.Data;
@@ -38,6 +39,10 @@ public class HibernateRole {
 
     @Column(name = "modification_date")
     private Timestamp modificationDate;
+
+    @Column(name = "is_deleted")
+    @JsonIgnore
+    private Boolean isDeleted;
 
     @ManyToMany
     @JoinTable(name = "l_role_user",

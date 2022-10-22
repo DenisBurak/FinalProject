@@ -1,4 +1,4 @@
-package com.zemelya.controller.request;
+package com.zemelya.controller.request.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.zemelya.controller;
 
-import com.zemelya.controller.request.UserChangeRequest;
-import com.zemelya.controller.request.UserCreateRequest;
+import com.zemelya.controller.request.user.UserChangeRequest;
+import com.zemelya.controller.request.user.UserCreateRequest;
 import com.zemelya.domain.hibernate.HibernateUser;
 import com.zemelya.repository.user.UserSpringDataRepository;
 import com.zemelya.security.util.PrincipalUtil;
@@ -18,11 +18,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AuthorizationServiceException;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -60,11 +57,7 @@ public class UserController {
   }
 
   @PostMapping("/create")
-  @Transactional(
-      isolation = Isolation.READ_COMMITTED,
-      propagation = Propagation.REQUIRED,
-      timeout = 100,
-      rollbackFor = Exception.class)
+  @Transactional
   @ResponseStatus(HttpStatus.CREATED)
   @RequestBody(
       description = "This method allows create a new user in DataBase.",
@@ -88,10 +81,10 @@ public class UserController {
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
-      description = "This method allows update a new user in DataBase.",
+      description = "This method allows update the user in DataBase.",
       required = true,
       content = @Content(schema = @Schema(implementation = UserChangeRequest.class)))
-  public HibernateUser updateUser(
+  public ResponseEntity<Object> updateUser(
       @org.springframework.web.bind.annotation.RequestBody UserChangeRequest userChangeRequest,
       Principal principal) {
 
@@ -99,29 +92,44 @@ public class UserController {
     Optional<HibernateUser> result = repository.findByCredentialsLogin(username);
 
     if (result.isPresent()) {
+
+      userChangeRequest.setId(result.get().getId());
       HibernateUser hibernateUser =
           conversionService.convert(userChangeRequest, HibernateUser.class);
 
       hibernateUser = service.update(hibernateUser);
 
-      return hibernateUser;
+      Map<String, Object> model = new HashMap<>();
+      model.put("user", service.findById(hibernateUser.getId()));
+
+      return new ResponseEntity<>(model, HttpStatus.OK);
+
     } else {
       throw new AuthorizationServiceException("User is not authenticate");
     }
   }
 
-  @PostMapping("/delete{id}")
+  @PostMapping("/delete")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
-  @Operation(description = "This method allows deactivate the new user in DataBase")
+  @Operation(description = "This method allows deactivate the user in DataBase")
   @ResponseStatus(HttpStatus.OK)
-  public HibernateUser deleteUser(@PathVariable Long id, Principal principal) {
+  public ResponseEntity<Object> deleteUser(Principal principal) {
 
     String username = PrincipalUtil.getUsername(principal);
     Optional<HibernateUser> result = repository.findByCredentialsLogin(username);
 
     if (result.isPresent()) {
-      return service.delete(id);
+
+      Long userId = result.get().getId();
+
+      HibernateUser hibernateUser = service.delete(userId);
+
+      Map<String, Object> model = new HashMap<>();
+      model.put("user", service.findById(hibernateUser.getId()));
+
+      return new ResponseEntity<>(model, HttpStatus.OK);
+
     } else {
       throw new AuthorizationServiceException("User is not authenticate");
     }

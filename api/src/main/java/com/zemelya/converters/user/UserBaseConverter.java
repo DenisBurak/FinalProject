@@ -1,14 +1,13 @@
-package com.zemelya.converters;
+package com.zemelya.converters.user;
 
-import com.zemelya.controller.request.UserCreateRequest;
-import com.zemelya.domain.Credentials;
+import com.zemelya.controller.request.user.UserCreateRequest;
 import com.zemelya.domain.hibernate.HibernateUser;
 import org.springframework.core.convert.converter.Converter;
 
 import java.sql.Timestamp;
 import java.util.Date;
 
-public abstract class EntityConverter<S, T> implements Converter<S, T> {
+public abstract class UserBaseConverter<S, T> implements Converter<S, T> {
     protected HibernateUser doConvert(HibernateUser user, UserCreateRequest request) {
 
         user.setUserName(request.getUserName());
