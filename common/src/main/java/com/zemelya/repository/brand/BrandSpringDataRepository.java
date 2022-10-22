@@ -12,7 +12,5 @@ import java.util.List;
 public interface BrandSpringDataRepository extends JpaRepository<HibernateBrand, Integer> {
 
     @Cacheable("brands")
-//    @Query(value = "select b from HibernateBrand b")
-//    List<HibernateBrand> findAllCustom();
     List<HibernateBrand> findAll();
 }

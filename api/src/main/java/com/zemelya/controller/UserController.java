@@ -5,7 +5,7 @@ import com.zemelya.controller.request.user.UserCreateRequest;
 import com.zemelya.domain.hibernate.HibernateUser;
 import com.zemelya.repository.user.UserSpringDataRepository;
 import com.zemelya.security.util.PrincipalUtil;
-import com.zemelya.service.user.UserServiceImpl;
+import com.zemelya.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class UserController {
 
   private final UserSpringDataRepository repository;
 
-  private final UserServiceImpl service;
+  private final UserService service;
 
   public final ConversionService conversionService;
 
@@ -64,7 +65,8 @@ public class UserController {
       required = true,
       content = @Content(schema = @Schema(implementation = UserCreateRequest.class)))
   public ResponseEntity<Object> createUser(
-      @org.springframework.web.bind.annotation.RequestBody UserCreateRequest userCreateRequest) {
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          UserCreateRequest userCreateRequest) {
 
     HibernateUser hibernateUser = conversionService.convert(userCreateRequest, HibernateUser.class);
 
@@ -85,7 +87,8 @@ public class UserController {
       required = true,
       content = @Content(schema = @Schema(implementation = UserChangeRequest.class)))
   public ResponseEntity<Object> updateUser(
-      @org.springframework.web.bind.annotation.RequestBody UserChangeRequest userChangeRequest,
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          UserChangeRequest userChangeRequest,
       Principal principal) {
 
     String username = PrincipalUtil.getUsername(principal);

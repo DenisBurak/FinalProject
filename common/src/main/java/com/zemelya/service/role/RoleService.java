@@ -19,4 +19,6 @@ public interface RoleService {
   List<HibernateRole> findAll();
 
   HibernateRole findById(Integer id);
+
+  List<Object[]> findOnlyRoles();
 }

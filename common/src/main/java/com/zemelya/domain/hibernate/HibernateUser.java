@@ -22,6 +22,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -44,6 +46,8 @@ public class HibernateUser {
     private String userName;
 
     @Column(name = "surname")
+//    @Valid
+//    @Size(min = 2, max = 50)
     private String surname;
 
     @Column(name = "birth")

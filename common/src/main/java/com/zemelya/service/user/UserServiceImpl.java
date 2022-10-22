@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -22,7 +21,6 @@ public class UserServiceImpl implements UserService {
 
   public final AdminService adminService;
 
-  @Transactional
   @Override
   public HibernateUser create(HibernateUser hibernateUser) {
 
@@ -39,7 +37,6 @@ public class UserServiceImpl implements UserService {
     return hibernateUser;
   }
 
-  @Transactional
   @Override
   public HibernateUser delete(Long userId) {
 
@@ -53,11 +50,10 @@ public class UserServiceImpl implements UserService {
       return userSpringDataRepository.findById(userId).get();
     } else {
       throw new EntityNotFoundException(
-          String.format("User with this id \"%s\" not found", userId));
+          String.format("User with this id \"%s\" is not found", userId));
     }
   }
 
-  @Transactional
   @Override
   public HibernateUser update(HibernateUser hibernateUser) {
 
