@@ -29,7 +29,7 @@ public class DrivingLicenseServiceImpl implements DrivingLicenseService {
 
     HibernateDrivingLicense hibernateDrivingLicense = findById(drivingLicenseId);
 
-    hibernateDrivingLicense.setIsDeleted(false);
+    hibernateDrivingLicense.setIsDeleted(true);
     repository.save(hibernateDrivingLicense);
 
     return findById(drivingLicenseId);

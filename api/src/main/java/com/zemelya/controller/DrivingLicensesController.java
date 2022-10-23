@@ -41,8 +41,6 @@ public class DrivingLicensesController {
 
   private final UserSpringDataRepository userRepository;
 
-  private final DrivingLicensesSpringDataRepository repository;
-
   private final DrivingLicenseService service;
 
   public final ConversionService conversionService;
@@ -69,7 +67,7 @@ public class DrivingLicensesController {
       description = "This method allows create a new driving license in DataBase.",
       required = true,
       content = @Content(schema = @Schema(implementation = DrivingLicenseCreateRequest.class)))
-  public ResponseEntity<Object> createUser(
+  public ResponseEntity<Object> createDrivingLicense(
       @Valid @org.springframework.web.bind.annotation.RequestBody
           DrivingLicenseCreateRequest drivingLicenseCreateRequest,
       Principal principal) {
@@ -79,12 +77,15 @@ public class DrivingLicensesController {
 
     if (result.isPresent()) {
 
-      HibernateDrivingLicense drivingLicense = service.findByUserId(result.get().getId());
+      Long userId = result.get().getId();
+      if(service.findByUserId(userId) != null){
+        throw new NumberFormatException("Driving license for current user is existed.");
+      }
 
-      drivingLicenseCreateRequest.setUser_id(drivingLicense.getId());
+      drivingLicenseCreateRequest.setUserId(userId);
 
-      drivingLicense =
-              conversionService.convert(drivingLicenseCreateRequest, HibernateDrivingLicense.class);
+      HibernateDrivingLicense drivingLicense =
+          conversionService.convert(drivingLicenseCreateRequest, HibernateDrivingLicense.class);
 
       drivingLicense = service.create(drivingLicense);
 
@@ -92,8 +93,7 @@ public class DrivingLicensesController {
       model.put("drivingLicense", service.findById(drivingLicense.getId()));
 
       return new ResponseEntity<>(model, HttpStatus.CREATED);
-      }
-    else {
+    } else {
       throw new AuthorizationServiceException("User is not authenticate");
     }
   }
@@ -106,7 +106,7 @@ public class DrivingLicensesController {
       description = "This method allows update the user's driving license in DataBase.",
       required = true,
       content = @Content(schema = @Schema(implementation = DrivingLicenseChangeRequest.class)))
-  public ResponseEntity<Object> updateUser(
+  public ResponseEntity<Object> updateDriverLicense(
       @Valid @org.springframework.web.bind.annotation.RequestBody
           DrivingLicenseChangeRequest drivingLicenseChangeRequest,
       Principal principal) {
@@ -116,7 +116,10 @@ public class DrivingLicensesController {
 
     if (result.isPresent()) {
 
-      HibernateDrivingLicense drivingLicense = service.findByUserId(result.get().getId());
+      Long userId = result.get().getId();
+      drivingLicenseChangeRequest.setUserId(userId);
+
+      HibernateDrivingLicense drivingLicense = service.findByUserId(userId);
 
       drivingLicenseChangeRequest.setId(drivingLicense.getId());
 
@@ -140,14 +143,12 @@ public class DrivingLicensesController {
   @Transactional
   @Operation(description = "This method allows deactivate the user's driving license in DataBase")
   @ResponseStatus(HttpStatus.OK)
-  public ResponseEntity<Object> deleteUser(Principal principal) {
+  public ResponseEntity<Object> deleteDrivingLicense(Principal principal) {
 
     String username = PrincipalUtil.getUsername(principal);
     Optional<HibernateUser> result = userRepository.findByCredentialsLogin(username);
 
     if (result.isPresent()) {
-
-      Long userId = result.get().getId();
 
       HibernateDrivingLicense drivingLicense = service.findByUserId(result.get().getId());
 

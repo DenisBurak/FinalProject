@@ -4,6 +4,7 @@ import com.zemelya.controller.request.drivingLicenses.DrivingLicenseCreateReques
 import com.zemelya.controller.request.user.UserCreateRequest;
 import com.zemelya.domain.hibernate.HibernateDrivingLicense;
 import com.zemelya.domain.hibernate.HibernateUser;
+import com.zemelya.service.user.UserService;
 import com.zemelya.service.user.UserServiceImpl;
 import org.springframework.core.convert.converter.Converter;
 
@@ -12,7 +13,7 @@ import java.util.Date;
 
 public abstract class DrivingLicenseBaseConverter<S, T> implements Converter<S, T> {
 
-    public UserServiceImpl userService;
+
 
     protected HibernateDrivingLicense doConvert(HibernateDrivingLicense drivingLicense, DrivingLicenseCreateRequest request) {
 
@@ -20,7 +21,6 @@ public abstract class DrivingLicenseBaseConverter<S, T> implements Converter<S, 
         drivingLicense.setCategory(request.getCategory());
         drivingLicense.setDateOfIssue(request.getDateOfIssue());
         drivingLicense.setExpirationDate(request.getExpirationDate());
-        drivingLicense.setUser(userService.findById(request.getUserId()));
 
         /*System fields filling*/
         drivingLicense.setModificationDate(new Timestamp(new Date().getTime()));

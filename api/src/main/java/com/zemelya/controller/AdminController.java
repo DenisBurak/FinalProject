@@ -5,14 +5,18 @@ import com.zemelya.controller.request.bodyType.BodyTypeCreateRequest;
 import com.zemelya.controller.request.brand.BrandChangeRequest;
 import com.zemelya.controller.request.brand.BrandCreateRequest;
 import com.zemelya.controller.request.drivingLicenses.DrivingLicenseChangeRequest;
+import com.zemelya.controller.request.model.ModelChangeRequest;
+import com.zemelya.controller.request.model.ModelCreateRequest;
 import com.zemelya.controller.request.user.UserChangeRequest;
 import com.zemelya.domain.hibernate.HibernateBodyType;
 import com.zemelya.domain.hibernate.HibernateBrand;
 import com.zemelya.domain.hibernate.HibernateDrivingLicense;
+import com.zemelya.domain.hibernate.HibernateModel;
 import com.zemelya.domain.hibernate.HibernateUser;
 import com.zemelya.service.bodyType.BodyTypeService;
 import com.zemelya.service.brand.BrandService;
 import com.zemelya.service.drivingLicense.DrivingLicenseService;
+import com.zemelya.service.model.ModelService;
 import com.zemelya.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -49,13 +53,15 @@ public class AdminController {
 
   private final UserService userService;
 
-  public final ConversionService conversionService;
+  private final ConversionService conversionService;
 
-  public final BodyTypeService bodyTypeService;
+  private final BodyTypeService bodyTypeService;
 
-  public final BrandService brandService;
+  private final BrandService brandService;
 
-  public final DrivingLicenseService drivingLicenseService;
+  private final DrivingLicenseService drivingLicenseService;
+
+  private final ModelService modelService;
 
   @PostMapping("/users/update")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
@@ -144,7 +150,7 @@ public class AdminController {
           description = "This method allows create a new body type in DataBase.",
           required = true,
           content = @Content(schema = @Schema(implementation = BodyTypeCreateRequest.class)))
-  public ResponseEntity<Object> createRole(@Valid
+  public ResponseEntity<Object> createBodyType(@Valid
                                            @org.springframework.web.bind.annotation.RequestBody BodyTypeCreateRequest bodyTypeCreateRequest) {
 
     HibernateBodyType hibernateBodyType = conversionService.convert(bodyTypeCreateRequest, HibernateBodyType.class);
@@ -346,6 +352,88 @@ public class AdminController {
     }
     return new ResponseEntity<>(
             Collections.singletonMap("result", drivingLicenseService.findById(drivingLicenseId)), HttpStatus.OK);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  @PostMapping("/models/create")
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Transactional
+  @ResponseStatus(HttpStatus.CREATED)
+  @RequestBody(
+          description = "This method allows create a new model in DataBase.",
+          required = true,
+          content = @Content(schema = @Schema(implementation = ModelCreateRequest.class)))
+  public ResponseEntity<Object> createModel(@Valid
+                                           @org.springframework.web.bind.annotation.RequestBody ModelCreateRequest modelCreateRequest) {
+
+    HibernateModel hibernateModel = conversionService.convert(modelCreateRequest, HibernateModel.class);
+
+    hibernateModel = modelService.create(hibernateModel);
+
+    Map<String, Object> model = new HashMap<>();
+    model.put("model", modelService.findById(hibernateModel.getId()));
+
+    return new ResponseEntity<>(model, HttpStatus.CREATED);
+  }
+
+  @PostMapping("/models/update")
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Transactional
+  @ResponseStatus(HttpStatus.OK)
+  @RequestBody(
+          description = "This method allows update the model in DataBase.",
+          required = true,
+          content = @Content(schema = @Schema(implementation = ModelChangeRequest.class)))
+  public ResponseEntity<Object> updateModel(@Valid
+                                               @org.springframework.web.bind.annotation.RequestBody ModelChangeRequest modelChangeRequest) {
+
+    HibernateModel hibernateModel = conversionService.convert(modelChangeRequest, HibernateModel.class);
+
+    hibernateModel = modelService.update(hibernateModel);
+
+    Map<String, Object> model = new HashMap<>();
+    model.put("model", modelService.findById(hibernateModel.getId()));
+
+    return new ResponseEntity<>(model, HttpStatus.OK);
+  }
+
+  @PostMapping("/models/delete{id}")
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Transactional
+  @Operation(description = "This method allows deactivate the model in DataBase")
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<Object> deleteModel(@PathVariable String id) {
+
+    Integer modelId = 0;
+    try {
+      modelId = Integer.parseInt(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid model ID");
+    }
+    HibernateModel hibernateModel = modelService.delete(modelId);
+
+    Map<String, Object> model = new HashMap<>();
+    model.put("model", modelService.findById(hibernateModel.getId()));
+
+    return new ResponseEntity<>(model, HttpStatus.OK);
+  }
+
+  @GetMapping("/models/findAll")
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  public ResponseEntity<Object> findAllModels() {
+
+    return new ResponseEntity<>(modelService.findAll(), HttpStatus.OK);
   }
 
 }
