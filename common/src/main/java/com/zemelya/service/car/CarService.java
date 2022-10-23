@@ -18,5 +18,4 @@ public interface CarService {
   List<HibernateCar> findAll();
 
   HibernateCar findById(Long carId);
-
 }

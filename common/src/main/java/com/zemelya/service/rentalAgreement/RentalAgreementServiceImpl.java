@@ -53,8 +53,14 @@ public class RentalAgreementServiceImpl implements RentalAgreementService {
     }
   }
 
+  @Override
+  public HibernateRentalAgreement findByUserId(Long id) {
+    return repository.findByUserId(id);
+  }
+
   private HibernateRentalAgreement saveRentalAgreement(
       HibernateRentalAgreement hibernateRentalAgreement) {
     return repository.save(hibernateRentalAgreement);
   }
+
 }

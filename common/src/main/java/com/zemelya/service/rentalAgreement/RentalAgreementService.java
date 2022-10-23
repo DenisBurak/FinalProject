@@ -16,4 +16,6 @@ public interface RentalAgreementService {
   List<HibernateRentalAgreement> findAll();
 
   HibernateRentalAgreement findById(Long rentalAgreementId);
+
+  HibernateRentalAgreement findByUserId(Long userId);
 }

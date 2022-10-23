@@ -4,19 +4,27 @@ import com.zemelya.controller.request.bodyType.BodyTypeChangeRequest;
 import com.zemelya.controller.request.bodyType.BodyTypeCreateRequest;
 import com.zemelya.controller.request.brand.BrandChangeRequest;
 import com.zemelya.controller.request.brand.BrandCreateRequest;
+import com.zemelya.controller.request.car.CarChangeRequest;
+import com.zemelya.controller.request.car.CarCreateRequest;
 import com.zemelya.controller.request.drivingLicenses.DrivingLicenseChangeRequest;
 import com.zemelya.controller.request.model.ModelChangeRequest;
 import com.zemelya.controller.request.model.ModelCreateRequest;
+import com.zemelya.controller.request.rentalAgreement.RentalAgreementChangeRequest;
+import com.zemelya.controller.request.rentalAgreement.RentalAgreementCreateRequest;
 import com.zemelya.controller.request.user.UserChangeRequest;
 import com.zemelya.domain.hibernate.HibernateBodyType;
 import com.zemelya.domain.hibernate.HibernateBrand;
+import com.zemelya.domain.hibernate.HibernateCar;
 import com.zemelya.domain.hibernate.HibernateDrivingLicense;
 import com.zemelya.domain.hibernate.HibernateModel;
+import com.zemelya.domain.hibernate.HibernateRentalAgreement;
 import com.zemelya.domain.hibernate.HibernateUser;
 import com.zemelya.service.bodyType.BodyTypeService;
 import com.zemelya.service.brand.BrandService;
+import com.zemelya.service.car.CarService;
 import com.zemelya.service.drivingLicense.DrivingLicenseService;
 import com.zemelya.service.model.ModelService;
+import com.zemelya.service.rentalAgreement.RentalAgreementService;
 import com.zemelya.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -48,7 +56,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
-@Tag(name = "Administator/Moderator controller")
+@Tag(name = "Administrator/Moderator controller")
 public class AdminController {
 
   private final UserService userService;
@@ -63,6 +71,10 @@ public class AdminController {
 
   private final ModelService modelService;
 
+  private final CarService carService;
+
+  private final RentalAgreementService rentalAgreementService;
+
   @PostMapping("/users/update")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
@@ -71,8 +83,9 @@ public class AdminController {
       description = "This method allows update the user in DataBase.",
       required = true,
       content = @Content(schema = @Schema(implementation = UserChangeRequest.class)))
-  public ResponseEntity<Object> updateUser(@Valid
-      @org.springframework.web.bind.annotation.RequestBody UserChangeRequest userChangeRequest) {
+  public ResponseEntity<Object> updateUser(
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          UserChangeRequest userChangeRequest) {
 
     HibernateUser hibernateUser = conversionService.convert(userChangeRequest, HibernateUser.class);
 
@@ -91,7 +104,7 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteUser(@PathVariable String id) {
 
-    Long userId = 0l;
+    Long userId;
     try {
       userId = Long.parseLong(id);
     } catch (NumberFormatException e) {
@@ -132,14 +145,14 @@ public class AdminController {
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> findById(@PathVariable String id) {
-    Long userId = 0l;
+    Long userId;
     try {
       userId = Long.parseLong(id);
     } catch (NumberFormatException e) {
       throw new NumberFormatException("Invalid user ID");
     }
     return new ResponseEntity<>(
-            Collections.singletonMap("result", userService.findById(userId)), HttpStatus.OK);
+        Collections.singletonMap("result", userService.findById(userId)), HttpStatus.OK);
   }
 
   @PostMapping("/bodyTypes/create")
@@ -147,13 +160,15 @@ public class AdminController {
   @Transactional
   @ResponseStatus(HttpStatus.CREATED)
   @RequestBody(
-          description = "This method allows create a new body type in DataBase.",
-          required = true,
-          content = @Content(schema = @Schema(implementation = BodyTypeCreateRequest.class)))
-  public ResponseEntity<Object> createBodyType(@Valid
-                                           @org.springframework.web.bind.annotation.RequestBody BodyTypeCreateRequest bodyTypeCreateRequest) {
+      description = "This method allows create a new body type in DataBase.",
+      required = true,
+      content = @Content(schema = @Schema(implementation = BodyTypeCreateRequest.class)))
+  public ResponseEntity<Object> createBodyType(
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          BodyTypeCreateRequest bodyTypeCreateRequest) {
 
-    HibernateBodyType hibernateBodyType = conversionService.convert(bodyTypeCreateRequest, HibernateBodyType.class);
+    HibernateBodyType hibernateBodyType =
+        conversionService.convert(bodyTypeCreateRequest, HibernateBodyType.class);
 
     hibernateBodyType = bodyTypeService.create(hibernateBodyType);
 
@@ -168,13 +183,15 @@ public class AdminController {
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
-          description = "This method allows update the body type in DataBase.",
-          required = true,
-          content = @Content(schema = @Schema(implementation = BodyTypeChangeRequest.class)))
-  public ResponseEntity<Object> updateBodyType(@Valid
-                                           @org.springframework.web.bind.annotation.RequestBody BodyTypeChangeRequest bodyTypeChangeRequest) {
+      description = "This method allows update the body type in DataBase.",
+      required = true,
+      content = @Content(schema = @Schema(implementation = BodyTypeChangeRequest.class)))
+  public ResponseEntity<Object> updateBodyType(
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          BodyTypeChangeRequest bodyTypeChangeRequest) {
 
-    HibernateBodyType hibernateBodyType = conversionService.convert(bodyTypeChangeRequest, HibernateBodyType.class);
+    HibernateBodyType hibernateBodyType =
+        conversionService.convert(bodyTypeChangeRequest, HibernateBodyType.class);
 
     hibernateBodyType = bodyTypeService.update(hibernateBodyType);
 
@@ -191,7 +208,7 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteBodyType(@PathVariable String id) {
 
-    Integer bodyTypeId = 0;
+    Integer bodyTypeId;
     try {
       bodyTypeId = Integer.parseInt(id);
     } catch (NumberFormatException e) {
@@ -217,13 +234,15 @@ public class AdminController {
   @Transactional
   @ResponseStatus(HttpStatus.CREATED)
   @RequestBody(
-          description = "This method allows create a brand in DataBase.",
-          required = true,
-          content = @Content(schema = @Schema(implementation = BrandCreateRequest.class)))
-  public ResponseEntity<Object> createBrand(@Valid
-                                           @org.springframework.web.bind.annotation.RequestBody BrandCreateRequest brandCreateRequest) {
+      description = "This method allows create a brand in DataBase.",
+      required = true,
+      content = @Content(schema = @Schema(implementation = BrandCreateRequest.class)))
+  public ResponseEntity<Object> createBrand(
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          BrandCreateRequest brandCreateRequest) {
 
-    HibernateBrand hibernateBrand = conversionService.convert(brandCreateRequest, HibernateBrand.class);
+    HibernateBrand hibernateBrand =
+        conversionService.convert(brandCreateRequest, HibernateBrand.class);
 
     hibernateBrand = brandService.create(hibernateBrand);
 
@@ -238,13 +257,15 @@ public class AdminController {
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
-          description = "This method allows update the body type in DataBase.",
-          required = true,
-          content = @Content(schema = @Schema(implementation = BrandChangeRequest.class)))
-  public ResponseEntity<Object> updateBrand(@Valid
-                                           @org.springframework.web.bind.annotation.RequestBody BrandChangeRequest brandChangeRequest) {
+      description = "This method allows update the body type in DataBase.",
+      required = true,
+      content = @Content(schema = @Schema(implementation = BrandChangeRequest.class)))
+  public ResponseEntity<Object> updateBrand(
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          BrandChangeRequest brandChangeRequest) {
 
-    HibernateBrand hibernateBrand = conversionService.convert(brandChangeRequest, HibernateBrand.class);
+    HibernateBrand hibernateBrand =
+        conversionService.convert(brandChangeRequest, HibernateBrand.class);
 
     hibernateBrand = brandService.update(hibernateBrand);
 
@@ -280,13 +301,15 @@ public class AdminController {
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
-          description = "This method allows update the user's driving license in DataBase.",
-          required = true,
-          content = @Content(schema = @Schema(implementation = DrivingLicenseChangeRequest.class)))
-  public ResponseEntity<Object> updateDrivingLicense(@Valid
-                                           @org.springframework.web.bind.annotation.RequestBody DrivingLicenseChangeRequest drivingLicenseChangeRequest) {
+      description = "This method allows update the user's driving license in DataBase.",
+      required = true,
+      content = @Content(schema = @Schema(implementation = DrivingLicenseChangeRequest.class)))
+  public ResponseEntity<Object> updateDrivingLicense(
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          DrivingLicenseChangeRequest drivingLicenseChangeRequest) {
 
-    HibernateDrivingLicense drivingLicense = conversionService.convert(drivingLicenseChangeRequest, HibernateDrivingLicense.class);
+    HibernateDrivingLicense drivingLicense =
+        conversionService.convert(drivingLicenseChangeRequest, HibernateDrivingLicense.class);
 
     drivingLicense = drivingLicenseService.update(drivingLicense);
 
@@ -299,7 +322,8 @@ public class AdminController {
   @PostMapping("/drivingLicenses/delete{id}")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
-  @Operation(description = "This method allows deactivate the user's driving license in DataBase by ID")
+  @Operation(
+      description = "This method allows deactivate the user's driving license in DataBase by ID")
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteDrivingLicense(@PathVariable String id) {
 
@@ -321,13 +345,13 @@ public class AdminController {
   @GetMapping("/drivingLicenses/findAllPageable")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Parameter(
-          in = ParameterIn.QUERY,
-          description =
-                  "Sorting criteria in the format: property(,asc|desc). "
-                          + "Default sort order is ascending. "
-                          + "Multiple sort criteria are supported.",
-          name = "sort",
-          array = @ArraySchema(schema = @Schema(type = "string")))
+      in = ParameterIn.QUERY,
+      description =
+          "Sorting criteria in the format: property(,asc|desc). "
+              + "Default sort order is ascending. "
+              + "Multiple sort criteria are supported.",
+      name = "sort",
+      array = @ArraySchema(schema = @Schema(type = "string")))
   public ResponseEntity<Object> findAllDrivingLicensesPageable(@ParameterObject Pageable pageable) {
 
     return new ResponseEntity<>(drivingLicenseService.findAll(pageable), HttpStatus.OK);
@@ -351,33 +375,24 @@ public class AdminController {
       throw new NumberFormatException("Invalid driving license ID");
     }
     return new ResponseEntity<>(
-            Collections.singletonMap("result", drivingLicenseService.findById(drivingLicenseId)), HttpStatus.OK);
+        Collections.singletonMap("result", drivingLicenseService.findById(drivingLicenseId)),
+        HttpStatus.OK);
   }
-
-
-
-
-
-
-
-
-
-
-
-
 
   @PostMapping("/models/create")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
   @ResponseStatus(HttpStatus.CREATED)
   @RequestBody(
-          description = "This method allows create a new model in DataBase.",
-          required = true,
-          content = @Content(schema = @Schema(implementation = ModelCreateRequest.class)))
-  public ResponseEntity<Object> createModel(@Valid
-                                           @org.springframework.web.bind.annotation.RequestBody ModelCreateRequest modelCreateRequest) {
+      description = "This method allows create a new model in DataBase.",
+      required = true,
+      content = @Content(schema = @Schema(implementation = ModelCreateRequest.class)))
+  public ResponseEntity<Object> createModel(
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          ModelCreateRequest modelCreateRequest) {
 
-    HibernateModel hibernateModel = conversionService.convert(modelCreateRequest, HibernateModel.class);
+    HibernateModel hibernateModel =
+        conversionService.convert(modelCreateRequest, HibernateModel.class);
 
     hibernateModel = modelService.create(hibernateModel);
 
@@ -392,13 +407,15 @@ public class AdminController {
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
-          description = "This method allows update the model in DataBase.",
-          required = true,
-          content = @Content(schema = @Schema(implementation = ModelChangeRequest.class)))
-  public ResponseEntity<Object> updateModel(@Valid
-                                               @org.springframework.web.bind.annotation.RequestBody ModelChangeRequest modelChangeRequest) {
+      description = "This method allows update the model in DataBase.",
+      required = true,
+      content = @Content(schema = @Schema(implementation = ModelChangeRequest.class)))
+  public ResponseEntity<Object> updateModel(
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          ModelChangeRequest modelChangeRequest) {
 
-    HibernateModel hibernateModel = conversionService.convert(modelChangeRequest, HibernateModel.class);
+    HibernateModel hibernateModel =
+        conversionService.convert(modelChangeRequest, HibernateModel.class);
 
     hibernateModel = modelService.update(hibernateModel);
 
@@ -436,4 +453,156 @@ public class AdminController {
     return new ResponseEntity<>(modelService.findAll(), HttpStatus.OK);
   }
 
+  @PostMapping("/cars/create")
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Transactional
+  @ResponseStatus(HttpStatus.CREATED)
+  @RequestBody(
+      description = "This method allows create a new car in DataBase.",
+      required = true,
+      content = @Content(schema = @Schema(implementation = CarCreateRequest.class)))
+  public ResponseEntity<Object> createCar(
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          CarCreateRequest carCreateRequest) {
+
+    HibernateCar hibernateCar = conversionService.convert(carCreateRequest, HibernateCar.class);
+
+    hibernateCar = carService.create(hibernateCar);
+
+    Map<String, Object> model = new HashMap<>();
+    model.put("car", carService.findById(hibernateCar.getId()));
+
+    return new ResponseEntity<>(model, HttpStatus.CREATED);
+  }
+
+  @PostMapping("/cars/update")
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Transactional
+  @ResponseStatus(HttpStatus.OK)
+  @RequestBody(
+      description = "This method allows update the car in DataBase.",
+      required = true,
+      content = @Content(schema = @Schema(implementation = CarChangeRequest.class)))
+  public ResponseEntity<Object> updateCar(
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          CarChangeRequest carChangeRequest) {
+
+    HibernateCar hibernateCar = conversionService.convert(carChangeRequest, HibernateCar.class);
+
+    hibernateCar = carService.update(hibernateCar);
+
+    Map<String, Object> model = new HashMap<>();
+    model.put("car", carService.findById(hibernateCar.getId()));
+
+    return new ResponseEntity<>(model, HttpStatus.OK);
+  }
+
+  @PostMapping("/cars/delete{id}")
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Transactional
+  @Operation(description = "This method allows deactivate the car in DataBase")
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<Object> deleteCar(@PathVariable String id) {
+
+    Long carId = 0L;
+    try {
+      carId = Long.parseLong(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid car ID");
+    }
+    HibernateCar hibernateCar = carService.delete(carId);
+
+    Map<String, Object> model = new HashMap<>();
+    model.put("car", carService.findById(hibernateCar.getId()));
+
+    return new ResponseEntity<>(model, HttpStatus.OK);
+  }
+
+  @GetMapping("/cars/findAll")
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  public ResponseEntity<Object> findAllCars() {
+
+    return new ResponseEntity<>(carService.findAll(), HttpStatus.OK);
+  }
+
+  @PostMapping("/rentalAgreements/create")
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Transactional
+  @ResponseStatus(HttpStatus.CREATED)
+  @RequestBody(
+      description = "This method allows create a new rental agreement in DataBase.",
+      required = true,
+      content = @Content(schema = @Schema(implementation = RentalAgreementCreateRequest.class)))
+  public ResponseEntity<Object> createRentalAgreement(
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          RentalAgreementCreateRequest rentalAgreementCreateRequest) {
+
+    HibernateRentalAgreement rentalAgreement =
+        conversionService.convert(rentalAgreementCreateRequest, HibernateRentalAgreement.class);
+
+    rentalAgreement = rentalAgreementService.create(rentalAgreement);
+
+    Map<String, Object> model = new HashMap<>();
+    model.put("rental agreement", rentalAgreementService.findById(rentalAgreement.getId()));
+
+    return new ResponseEntity<>(model, HttpStatus.CREATED);
+  }
+
+  @PostMapping("/rentalAgreements/update")
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Transactional
+  @ResponseStatus(HttpStatus.OK)
+  @RequestBody(
+      description = "This method allows update the rental agreement in DataBase.",
+      required = true,
+      content = @Content(schema = @Schema(implementation = RentalAgreementChangeRequest.class)))
+  public ResponseEntity<Object> updateRentalAgreement(
+      @Valid @org.springframework.web.bind.annotation.RequestBody
+          RentalAgreementChangeRequest rentalAgreementChangeRequest) {
+
+    HibernateRentalAgreement rentalAgreement =
+        conversionService.convert(rentalAgreementChangeRequest, HibernateRentalAgreement.class);
+
+    rentalAgreement = rentalAgreementService.update(rentalAgreement);
+
+    Map<String, Object> model = new HashMap<>();
+    model.put("rentalAgreement", rentalAgreementService.findById(rentalAgreement.getId()));
+
+    return new ResponseEntity<>(model, HttpStatus.OK);
+  }
+
+  @GetMapping("/rentalAgreements/findAll")
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  public ResponseEntity<Object> findAllRentalAgreements() {
+
+    return new ResponseEntity<>(rentalAgreementService.findAll(), HttpStatus.OK);
+  }
+
+  @GetMapping("/rentalAgreements/findById{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<Object> rentalAgreementServiceFindByIdRentalAgreement(@PathVariable String id) {
+    Long rentalAgreementId;
+    try {
+      rentalAgreementId = Long.parseLong(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid rental agreement ID");
+    }
+
+    return new ResponseEntity<>(
+            Collections.singletonMap("result", rentalAgreementService.findById(rentalAgreementId)), HttpStatus.OK);
+  }
+
+  @GetMapping("/rentalAgreements/findAllPageable")
+  @Parameter(
+          in = ParameterIn.QUERY,
+          description =
+                  "Sorting criteria in the format: property(,asc|desc). "
+                          + "Default sort order is ascending. "
+                          + "Multiple sort criteria are supported.",
+          name = "sort",
+          array = @ArraySchema(schema = @Schema(type = "string")))
+  public ResponseEntity<Object> rentalAgreementServiceFFindAllPageable(@ParameterObject Pageable pageable) {
+
+    return new ResponseEntity<>(rentalAgreementService.findAll(pageable), HttpStatus.OK);
+  }
 }

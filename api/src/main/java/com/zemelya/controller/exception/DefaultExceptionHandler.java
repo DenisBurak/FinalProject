@@ -1,8 +1,9 @@
 package com.zemelya.controller.exception;
 
-import com.zemelya.exception.NoSuchEntityException;
 import com.zemelya.util.UUIDGenerator;
 import org.apache.log4j.Logger;
+import org.springframework.core.convert.ConversionFailedException;
+import org.springframework.core.convert.ConverterNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,10 @@ public class DefaultExceptionHandler {
       Logger.getLogger(com.zemelya.controller.exception.DefaultExceptionHandler.class);
 
   @ExceptionHandler({
-    NoSuchEntityException.class,
     EmptyResultDataAccessException.class,
     NoSuchElementException.class,
-    EntityNotFoundException.class
+    EntityNotFoundException.class,
+    ConversionFailedException.class
   })
   public ResponseEntity<Object> handlerEntityNotFoundException(Exception e) {
 
@@ -74,7 +75,7 @@ public class DefaultExceptionHandler {
     ErrorContainer error = createError(1, "General error", e);
 
     return new ResponseEntity<>(
-            Collections.singletonMap("error", error), HttpStatus.INTERNAL_SERVER_ERROR);
+        Collections.singletonMap("error", error), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   private ErrorContainer createError(int errorCode, String errorMessage, Exception e) {
