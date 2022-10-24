@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface RoleSpringDataRepository extends JpaRepository<HibernateRole, Integer> {
 
-//    List<HibernateRole> findByUserId(Long UserId);
     @Query(value = "select * from rentalcars.roles " +
             "inner join rentalcars.l_role_user " +
             "on rentalcars.roles.id = rentalcars.l_role_user.role_id " +

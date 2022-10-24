@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,6 +63,16 @@ public class CarServiceImpl implements CarService {
       throw new EntityNotFoundException(
           String.format("Car with this id \"%s\" is not found", carId));
     }
+  }
+
+  @Override
+  public List<Object> showAvailableCars(Timestamp date) {
+    return repository.showAvailableCars(date);
+  }
+
+  @Override
+  public List<HibernateCar> showTopPopularCars(Integer selectedLimit) {
+    return repository.showTopPopularCars(selectedLimit);
   }
 
   private HibernateCar saveCar(HibernateCar hibernateCar) {

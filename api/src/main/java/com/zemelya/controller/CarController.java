@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Timestamp;
 import java.util.Collections;
 
 @RestController
@@ -56,5 +57,33 @@ public class CarController {
 
     return new ResponseEntity<>(
         Collections.singletonMap("result", service.findById(carId)), HttpStatus.OK);
+  }
+
+  @GetMapping("/showAvailableCars{date}")
+  @Parameter(in = ParameterIn.PATH, name = "date", required = true, example = "2022-10-24 00:00:00")
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<Object> showAvailableCars(@PathVariable() String date) {
+
+    Timestamp dateForQuery;
+    try {
+      dateForQuery = Timestamp.valueOf(date);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid date.");
+    }
+    return new ResponseEntity<>(service.showAvailableCars(dateForQuery), HttpStatus.OK);
+  }
+
+  @GetMapping("/showTopPopularCars{selectedLimit}")
+  @Parameter(in = ParameterIn.PATH, name = "selectedLimit", required = true, example = "1")
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<Object> showTopPopularCars(@PathVariable String selectedLimit) {
+    Integer selectedLimitInt;
+    try{
+      selectedLimitInt = Integer.parseInt(selectedLimit);
+    }
+    catch(NumberFormatException e) {
+            throw new NumberFormatException("Incorrect limit");
+    }
+    return new ResponseEntity<>(service.showTopPopularCars(selectedLimitInt), HttpStatus.OK);
   }
 }

@@ -4,6 +4,7 @@ import com.zemelya.domain.hibernate.HibernateCar;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface CarService {
@@ -18,4 +19,8 @@ public interface CarService {
   List<HibernateCar> findAll();
 
   HibernateCar findById(Long carId);
+
+  List<Object> showAvailableCars(Timestamp date);
+
+  List<HibernateCar> showTopPopularCars(Integer selectedLimit);
 }
