@@ -4,7 +4,9 @@ import com.zemelya.domain.hibernate.HibernateRole;
 import com.zemelya.domain.hibernate.HibernateUser;
 import com.zemelya.repository.user.UserSpringDataRepository;
 import com.zemelya.service.AdminService;
+import com.zemelya.service.MailSenderCustom;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,9 @@ public class UserServiceImpl implements UserService {
 
   private final UserSpringDataRepository userSpringDataRepository;
 
-  public final AdminService adminService;
+  private final AdminService adminService;
+
+  private final MailSenderCustom mailSender;
 
   @Override
   public HibernateUser create(HibernateUser hibernateUser) {
@@ -29,6 +33,12 @@ public class UserServiceImpl implements UserService {
     hibernateUser = adminService.setRoles(hibernateUser, DEFAULT_USER_ROLE_ID);
 
     hibernateUser = userSpringDataRepository.save(hibernateUser);
+
+    if(!StringUtils.isEmpty(hibernateUser.getEmail())){
+      String massage = "Congratulation. You registrated in service for renting car.\n"
+              + "Your login in system:" + hibernateUser.getCredentials().getLogin();
+      mailSender.send(hibernateUser.getEmail(), "Registration in rental cars service.", massage);
+    }
 
     for (HibernateRole updatedRole : hibernateUser.getRoles()) {
       userSpringDataRepository.createRoleRow(hibernateUser.getId(), updatedRole.getId());
