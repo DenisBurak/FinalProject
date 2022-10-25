@@ -2,23 +2,26 @@ package com.zemelya.converters.user;
 
 import com.zemelya.controller.request.user.UserChangeRequest;
 import com.zemelya.domain.hibernate.HibernateUser;
-import javax.persistence.EntityNotFoundException;
-import com.zemelya.repository.user.UserSpringDataRepository;
+import com.zemelya.service.user.UserService;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.EntityNotFoundException;
 
 @Component
 public class UserEditRequestConverter extends UserBaseConverter<UserChangeRequest, HibernateUser> {
 
-    private final UserSpringDataRepository userRepository;
+  private final UserService service;
 
-    public UserEditRequestConverter(UserSpringDataRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+  public UserEditRequestConverter(UserService service) {
+    this.service = service;
+  }
 
-    @Override
-    public HibernateUser convert(UserChangeRequest request) {
+  @Override
+  public HibernateUser convert(UserChangeRequest request) {
 
-        HibernateUser hibernateUser = userRepository.findById(request.getId()).orElseThrow(EntityNotFoundException::new);
-        return doConvert(hibernateUser, request);
-    }
+    HibernateUser hibernateUser = service.findById(request.getId());
+
+    return doConvert(hibernateUser, request);
+
+  }
 }

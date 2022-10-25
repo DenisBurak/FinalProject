@@ -17,4 +17,5 @@ public interface UserSpringDataRepository extends JpaRepository<HibernateUser, L
       value = "insert into rentalcars.l_role_user(user_id, role_id) values (:user_id, :role_id)",
       nativeQuery = true)
   int createRoleRow(@Param("user_id") Long userId, @Param("role_id") Integer roleId);
+
 }

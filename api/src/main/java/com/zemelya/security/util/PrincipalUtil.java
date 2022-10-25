@@ -13,14 +13,4 @@ public class PrincipalUtil {
         Object castedPrincipal = ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         return ((User) castedPrincipal).getUsername();
     }
-
-    public static String getPassword(Principal principal) {
-        Object castedPrincipal = ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-        return ((User) castedPrincipal).getPassword();
-    }
-
-    public static Collection<GrantedAuthority> getAuthorities(Principal principal) {
-        Object castedPrincipal = ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-        return ((User) castedPrincipal).getAuthorities();
-    }
 }

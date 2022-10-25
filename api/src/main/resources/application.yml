@@ -9,6 +9,18 @@ spring:
     default-schema: rentalcars
     out-of-order: true
     ignore-migration-patterns: '*:ignored'
+  mail:
+    host: smtp.gmail.com
+    username: www.pixel93@gmail.com
+    password: huguhxptywqqljzu
+    port: 587
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      starttls.required: true
+      ssl.trust: smtp.gmail.com
   datasource:
     hikari:
       jdbc-url: "jdbc:postgresql://localhost:5432/projectBase"
@@ -24,10 +36,4 @@ server:
 
 jwt:
   secret: qwepuisdhfaksdjflsdfn747477_____**
-  expiration: 600000
-
-#---
-#
-#springdoc:
-#  swagger-ui:
-#    default-models-expand-depth: -1
+  expiration: 6000000

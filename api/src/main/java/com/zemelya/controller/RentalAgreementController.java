@@ -48,7 +48,7 @@ public class RentalAgreementController {
 
   private final UserSpringDataRepository userRepository;
 
-  @PostMapping("/create")
+  @PostMapping()
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
   @ResponseStatus(HttpStatus.CREATED)

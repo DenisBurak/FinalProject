@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-  private final UserSpringDataRepository userSpringDataRepository;
+  private final UserSpringDataRepository repository;
 
   private final AdminService adminService;
 
@@ -30,18 +31,25 @@ public class UserServiceImpl implements UserService {
 
     final Integer DEFAULT_USER_ROLE_ID = 2;
 
+    if (findByCredentialsLogin(hibernateUser.getCredentials().getLogin()).isPresent()) {
+      throw new EntityExistsException(
+          "User with login: " + hibernateUser.getCredentials().getLogin() + " is exists.");
+    }
+
     hibernateUser = adminService.setRoles(hibernateUser, DEFAULT_USER_ROLE_ID);
 
-    hibernateUser = userSpringDataRepository.save(hibernateUser);
+    hibernateUser = repository.save(hibernateUser);
 
-    if(!StringUtils.isEmpty(hibernateUser.getEmail())){
-      String massage = "Congratulation. You registrated in service for renting car.\n"
-              + "Your login in system:" + hibernateUser.getCredentials().getLogin();
+    if (!StringUtils.isEmpty(hibernateUser.getEmail())) {
+      String massage =
+          "Congratulation. You registrated in service for renting car.\n"
+              + "Your login in system:"
+              + hibernateUser.getCredentials().getLogin();
       mailSender.send(hibernateUser.getEmail(), "Registration in rental cars service.", massage);
     }
 
     for (HibernateRole updatedRole : hibernateUser.getRoles()) {
-      userSpringDataRepository.createRoleRow(hibernateUser.getId(), updatedRole.getId());
+      repository.createRoleRow(hibernateUser.getId(), updatedRole.getId());
     }
 
     return hibernateUser;
@@ -50,14 +58,14 @@ public class UserServiceImpl implements UserService {
   @Override
   public HibernateUser delete(Long userId) {
 
-    Optional<HibernateUser> result = userSpringDataRepository.findById(userId);
+    Optional<HibernateUser> result = repository.findById(userId);
 
     if (result.isPresent()) {
       HibernateUser hibernateUser = result.get();
       hibernateUser.setIsDeleted(true);
-      userSpringDataRepository.save(hibernateUser);
+      repository.save(hibernateUser);
 
-      return userSpringDataRepository.findById(userId).get();
+      return repository.findById(userId).get();
     } else {
       throw new EntityNotFoundException(
           String.format("User with this id \"%s\" is not found", userId));
@@ -67,21 +75,21 @@ public class UserServiceImpl implements UserService {
   @Override
   public HibernateUser update(HibernateUser hibernateUser) {
 
-    return userSpringDataRepository.save(hibernateUser);
+    return repository.save(hibernateUser);
   }
 
   @Override
   public Page<HibernateUser> findAll(Pageable pageable) {
-    return userSpringDataRepository.findAll(pageable);
+    return repository.findAll(pageable);
   }
 
   @Override
   public List<HibernateUser> findAll() {
-    return userSpringDataRepository.findAll();
+    return repository.findAll();
   }
 
   public HibernateUser findById(Long userId) {
-    Optional<HibernateUser> result = userSpringDataRepository.findById(userId);
+    Optional<HibernateUser> result = repository.findById(userId);
 
     if (result.isPresent()) {
       return result.get();
@@ -89,5 +97,10 @@ public class UserServiceImpl implements UserService {
       throw new EntityNotFoundException(
           String.format("User with this id \"%s\" not found", userId));
     }
+  }
+
+  @Override
+  public Optional<HibernateUser> findByCredentialsLogin(String login) {
+    return repository.findByCredentialsLogin(login);
   }
 }

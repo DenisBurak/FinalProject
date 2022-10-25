@@ -24,116 +24,70 @@ import static java.util.Calendar.MILLISECOND;
 @RequiredArgsConstructor
 public class JwtTokenHelper {
 
-    /*Generate JWT Token and fields in token. Also add signature into 3-d part of token*/
-    public static final String CREATE_VALUE = "created";
+  public static final String CREATE_VALUE = "created";
 
-    public static final String ROLES = "roles";
+  public static final String ROLES = "roles";
 
-    public static final SignatureAlgorithm ALGORITHM = SignatureAlgorithm.HS512;
+  public static final SignatureAlgorithm ALGORITHM = SignatureAlgorithm.HS512;
 
-    public static final String JWT = "JWT";
+  public static final String JWT = "JWT";
 
-    private final JwtSecurityConfig jwtTokenConfig;
+  private final JwtSecurityConfig jwtTokenConfig;
 
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(SUBJECT, userDetails.getUsername());
-        claims.put(CREATE_VALUE, generateCurrentDate());
-        claims.put(ROLES, getEncryptedRoles(userDetails));
-        return generateToken(claims);
-    }
+  public String generateToken(UserDetails userDetails) {
+    Map<String, Object> claims = new HashMap<>();
+    claims.put(SUBJECT, userDetails.getUsername());
+    claims.put(CREATE_VALUE, generateCurrentDate());
+    claims.put(ROLES, getEncryptedRoles(userDetails));
+    return generateToken(claims);
+  }
 
-    private String generateToken(Map<String, Object> claims) {
+  private String generateToken(Map<String, Object> claims) {
 
-        return Jwts
-                .builder()
-                /*Set headers with algo and token type info*/
-                .setHeader(generateJWTHeaders())
-                /*We create payload with user info, roles, expiration date of token*/
-                .setClaims(claims)
-                .setExpiration(generateExpirationDate())
-                /*Signature*/
-                .signWith(ALGORITHM, jwtTokenConfig.getSecret())
-                .compact();
-    }
+    return Jwts.builder()
+        .setHeader(generateJWTHeaders())
+        .setClaims(claims)
+        .setExpiration(generateExpirationDate())
+        .signWith(ALGORITHM, jwtTokenConfig.getSecret())
+        .compact();
+  }
 
-    private Map<String, Object> generateJWTHeaders() {
-        Map<String, Object> jwtHeaders = new LinkedHashMap<>();
-        jwtHeaders.put("typ", JWT);
-        jwtHeaders.put("alg", ALGORITHM.getValue());
+  private Map<String, Object> generateJWTHeaders() {
+    Map<String, Object> jwtHeaders = new LinkedHashMap<>();
+    jwtHeaders.put("typ", JWT);
+    jwtHeaders.put("alg", ALGORITHM.getValue());
 
-        return jwtHeaders;
-    }
+    return jwtHeaders;
+  }
 
-    public String getUsernameFromToken(String token) {
-        return getClaimsFromToken(token).getSubject();
-    }
+  public String getUsernameFromToken(String token) {
+    return getClaimsFromToken(token).getSubject();
+  }
 
-    public Date getCreatedDateFromToken(String token) {
-        return (Date) getClaimsFromToken(token).get(CREATE_VALUE);
-    }
+  private Claims getClaimsFromToken(String token) {
+    return Jwts.parser().setSigningKey(jwtTokenConfig.getSecret()).parseClaimsJws(token).getBody();
+  }
 
-    public Date getExpirationDateFromToken(String token) {
-        return getClaimsFromToken(token).getExpiration();
-    }
+  private Date generateCurrentDate() {
+    return new Date();
+  }
 
-    private Claims getClaimsFromToken(String token) {
-        return Jwts
-                .parser()
-                .setSigningKey(jwtTokenConfig.getSecret())
-                .parseClaimsJws(token)
-                .getBody();
-    }
+  private Date generateExpirationDate() {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(MILLISECOND, jwtTokenConfig.getExpiration());
+    return calendar.getTime();
+  }
 
-    private Date generateCurrentDate() {
-        return new Date();
-    }
+  private List<String> getEncryptedRoles(UserDetails userDetails) {
+    return userDetails.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .map(s -> s.replace("ROLE_", ""))
+        .map(String::toLowerCase)
+        .collect(Collectors.toList());
+  }
 
-    private Date generateExpirationDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(MILLISECOND, jwtTokenConfig.getExpiration());
-        return calendar.getTime();
-    }
-
-    private Boolean isTokenExpired(String token) {
-        final Date expiration = this.getExpirationDateFromToken(token);
-        return expiration.before(this.generateCurrentDate());
-    }
-
-    private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
-        return (lastPasswordReset != null && created.before(lastPasswordReset));
-    }
-
-    private List<String> getEncryptedRoles(UserDetails userDetails) {
-        return userDetails.getAuthorities().
-                stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(s -> s.replace("ROLE_", ""))
-                .map(String::toLowerCase)
-                .collect(Collectors.toList());
-    }
-
-    public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
-        final Date created = this.getCreatedDateFromToken(token);
-        return !(this.isCreatedBeforeLastPasswordReset(created, lastPasswordReset))
-                && !(this.isTokenExpired(token));
-    }
-
-    public String refreshToken(String token) {
-        String refreshedToken;
-        try {
-            final Claims claims = this.getClaimsFromToken(token);
-            claims.put("created", this.generateCurrentDate());
-            refreshedToken = this.generateToken(claims);
-        } catch (Exception e) {
-            refreshedToken = null;
-        }
-        return refreshedToken;
-    }
-
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
-        return username.equals(userDetails.getUsername());
-    }
-
+  public Boolean validateToken(String token, UserDetails userDetails) {
+    final String username = getUsernameFromToken(token);
+    return username.equals(userDetails.getUsername());
+  }
 }

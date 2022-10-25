@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.zemelya.domain.Credentials;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -46,8 +47,6 @@ public class HibernateUser {
     private String userName;
 
     @Column(name = "surname")
-//    @Valid
-//    @Size(min = 2, max = 50)
     private String surname;
 
     @Column(name = "birth")

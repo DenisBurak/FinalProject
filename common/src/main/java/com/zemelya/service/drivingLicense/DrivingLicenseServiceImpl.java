@@ -60,13 +60,18 @@ public class DrivingLicenseServiceImpl implements DrivingLicenseService {
       return result.get();
     } else {
       throw new EntityNotFoundException(
-          String.format("DrivingLicense with this id \"%s\" is not found", drivingLicenseId));
+          String.format("Driving license with this id \"%s\" is not found", drivingLicenseId));
     }
   }
 
   @Override
   public HibernateDrivingLicense findByUserId(Long id) {
-    return repository.findByUserId(id);
+    HibernateDrivingLicense hibernateDrivingLicense = repository.findByUserId(id);
+    if (hibernateDrivingLicense != null) {
+      return hibernateDrivingLicense;
+    } else {
+      throw new EntityNotFoundException(String.format("User's driving license is not found"));
+    }
   }
 
   private HibernateDrivingLicense saveDrivingLicense(

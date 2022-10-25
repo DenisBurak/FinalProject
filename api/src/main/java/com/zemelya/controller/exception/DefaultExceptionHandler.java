@@ -1,5 +1,6 @@
 package com.zemelya.controller.exception;
 
+import com.zemelya.exception.TooManyRequestException;
 import com.zemelya.util.UUIDGenerator;
 import org.apache.log4j.Logger;
 import org.springframework.core.convert.ConversionFailedException;
@@ -7,6 +8,8 @@ import org.springframework.core.convert.ConverterNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
 import java.util.Collections;
@@ -31,7 +35,8 @@ public class DefaultExceptionHandler {
     EmptyResultDataAccessException.class,
     NoSuchElementException.class,
     EntityNotFoundException.class,
-    ConversionFailedException.class
+    ConversionFailedException.class,
+    UsernameNotFoundException.class
   })
   public ResponseEntity<Object> handlerEntityNotFoundException(Exception e) {
 
@@ -40,7 +45,27 @@ public class DefaultExceptionHandler {
     return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
   }
 
-  @ExceptionHandler({NumberFormatException.class})
+  @ExceptionHandler({
+          EntityExistsException.class})
+  public ResponseEntity<Object> handlerEntityExistsException(EntityExistsException e) {
+
+    ErrorContainer error = createError(3, e.getMessage(), e);
+
+    return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.FOUND);
+  }
+
+  @ExceptionHandler({
+          TooManyRequestException.class})
+  public ResponseEntity<Object> handlerTooManyRequestException(TooManyRequestException e) {
+
+    ErrorContainer error = createError(e.getErrorCode(), e.getCustomMessage(), e);
+
+    return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.TOO_MANY_REQUESTS);
+  }
+
+  @ExceptionHandler({
+          NumberFormatException.class,
+          HttpMessageNotReadableException.class})
   public ResponseEntity<Object> handlerNumberFormatException(Exception e) {
 
     ErrorContainer error = createError(3, e.getMessage(), e);

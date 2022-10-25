@@ -41,7 +41,7 @@ public class RoleController {
 
   public final ConversionService conversionService;
 
-  @PostMapping("/create")
+  @PostMapping()
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
   @ResponseStatus(HttpStatus.CREATED)

@@ -19,38 +19,33 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserSecurityService implements UserDetailsService {
 
-    private final UserSpringDataRepository userRepository;
+  private final UserSpringDataRepository userRepository;
 
-    private final RoleSpringDataRepository roleRepository;
+  private final RoleSpringDataRepository roleRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        try {
-            /*Find user in DB*/
-            Optional<HibernateUser> searchResult = userRepository.findByCredentialsLogin(username);
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    try {
 
-            if (searchResult.isPresent()) {
-                HibernateUser user = searchResult.get();
+      Optional<HibernateUser> searchResult = userRepository.findByCredentialsLogin(username);
 
-                /*We are creating Spring Security User object*/
+      if (searchResult.isPresent()) {
+        HibernateUser user = searchResult.get();
 
-                return new org.springframework.security.core.userdetails.User(
-                        user.getCredentials().getLogin(),
-                        user.getCredentials().getPassword(),
-//                        ["ROLE_USER", "ROLE_ADMIN"]
-                        AuthorityUtils.commaSeparatedStringToAuthorityList(
-                                roleRepository.findByUserId(user.getId())
-                                        .stream()
-                                        .map(HibernateRole::getRoleName)
-                                        .map(SystemRoles::name)
-                                        .collect(Collectors.joining(","))
-                        )
-                );
-            } else {
-                throw new UsernameNotFoundException(String.format("No user found with login '%s'.", username));
-            }
-        } catch (Exception e) {
-            throw new UsernameNotFoundException("User with this login not found");
-        }
+        return new org.springframework.security.core.userdetails.User(
+            user.getCredentials().getLogin(),
+            user.getCredentials().getPassword(),
+            AuthorityUtils.commaSeparatedStringToAuthorityList(
+                roleRepository.findByUserId(user.getId()).stream()
+                    .map(HibernateRole::getRoleName)
+                    .map(SystemRoles::name)
+                    .collect(Collectors.joining(","))));
+      } else {
+        throw new UsernameNotFoundException(
+            String.format("No user found with login '%s'.", username));
+      }
+    } catch (Exception e) {
+      throw new UsernameNotFoundException("User with this login not found");
     }
+  }
 }

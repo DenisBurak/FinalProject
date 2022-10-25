@@ -2,30 +2,26 @@ package com.zemelya.converters.car;
 
 import com.zemelya.controller.request.car.CarChangeRequest;
 import com.zemelya.domain.hibernate.HibernateCar;
-import com.zemelya.repository.car.CarSpringDataRepository;
-import com.zemelya.repository.model.ModelSpringDataRepository;
+import com.zemelya.service.car.CarService;
 import com.zemelya.service.model.ModelService;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.EntityNotFoundException;
 
 @Component
 public class CarEditRequestConverter extends CarBaseConverter<CarChangeRequest, HibernateCar> {
 
-  private final CarSpringDataRepository repository;
+  private final CarService service;
 
   private final ModelService modelService;
 
-  public CarEditRequestConverter(CarSpringDataRepository repository, ModelService modelService) {
-    this.repository = repository;
+  public CarEditRequestConverter(CarService service, ModelService modelService) {
+    this.service = service;
     this.modelService = modelService;
   }
 
   @Override
   public HibernateCar convert(CarChangeRequest request) {
 
-    HibernateCar hibernateCar =
-        repository.findById(request.getId()).orElseThrow(EntityNotFoundException::new);
+    HibernateCar hibernateCar = service.findById(request.getId());
 
     hibernateCar.setModel(modelService.findById(request.getModelId()));
 

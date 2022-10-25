@@ -1,6 +1,7 @@
 package com.zemelya.controller;
 
 import com.zemelya.service.car.CarService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -48,7 +49,7 @@ public class CarController {
   @GetMapping("/findById{id}")
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> findById(@PathVariable String id) {
-    Long carId = 0L;
+    Long carId;
     try {
       carId = Long.parseLong(id);
     } catch (NumberFormatException e) {
@@ -60,6 +61,7 @@ public class CarController {
   }
 
   @GetMapping("/showAvailableCars{date}")
+  @Operation(description = "Shows available cars on selected date.")
   @Parameter(in = ParameterIn.PATH, name = "date", required = true, example = "2022-10-24 00:00:00")
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> showAvailableCars(@PathVariable() String date) {
@@ -74,7 +76,8 @@ public class CarController {
   }
 
   @GetMapping("/showTopPopularCars{selectedLimit}")
-  @Parameter(in = ParameterIn.PATH, name = "selectedLimit", required = true, example = "1")
+  @Operation(description = "Shows top popular cars among the users.")
+  @Parameter(in = ParameterIn.PATH, name = "selectedLimit", required = true, example = "1", description = "How many cars will be shown.")
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> showTopPopularCars(@PathVariable String selectedLimit) {
     Integer selectedLimitInt;
