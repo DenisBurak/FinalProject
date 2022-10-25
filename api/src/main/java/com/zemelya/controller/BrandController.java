@@ -47,7 +47,7 @@ public class BrandController {
     @GetMapping("/findById{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> findById(@PathVariable String id) {
-        Integer brandId = 0;
+        Integer brandId;
         try {
             brandId = Integer.parseInt(id);
         } catch (NumberFormatException e) {

@@ -282,7 +282,7 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteBrand(@PathVariable String id) {
 
-    Integer brandId = 0;
+    Integer brandId;
     try {
       brandId = Integer.parseInt(id);
     } catch (NumberFormatException e) {
@@ -327,7 +327,7 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteDrivingLicense(@PathVariable String id) {
 
-    Long drivingLicenseId = 0l;
+    Long drivingLicenseId;
     try {
       drivingLicenseId = Long.parseLong(id);
     } catch (NumberFormatException e) {
@@ -368,7 +368,7 @@ public class AdminController {
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> findByDrivingLicenseId(@PathVariable String id) {
-    Long drivingLicenseId = 0l;
+    Long drivingLicenseId;
     try {
       drivingLicenseId = Long.parseLong(id);
     } catch (NumberFormatException e) {
@@ -432,7 +432,7 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteModel(@PathVariable String id) {
 
-    Integer modelId = 0;
+    Integer modelId;
     try {
       modelId = Integer.parseInt(id);
     } catch (NumberFormatException e) {
@@ -504,7 +504,7 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteCar(@PathVariable String id) {
 
-    Long carId = 0L;
+    Long carId;
     try {
       carId = Long.parseLong(id);
     } catch (NumberFormatException e) {

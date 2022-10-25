@@ -92,7 +92,7 @@ public class RoleController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteRole(@PathVariable String id) {
 
-    Integer roleId = 0;
+    Integer roleId;
     try {
       roleId = Integer.parseInt(id);
     } catch (NumberFormatException e) {
@@ -140,7 +140,7 @@ public class RoleController {
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> findById(@PathVariable String id) {
-    Integer roleId = 0;
+    Integer roleId;
     try {
       roleId = Integer.parseInt(id);
     } catch (NumberFormatException e) {

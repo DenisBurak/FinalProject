@@ -48,7 +48,7 @@ public class BodyTypeController {
   @GetMapping("/findById{id}")
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> findById(@PathVariable String id) {
-    Integer bodyTypeId = 0;
+    Integer bodyTypeId;
     try {
       bodyTypeId = Integer.parseInt(id);
     } catch (NumberFormatException e) {
