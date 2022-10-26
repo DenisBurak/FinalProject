@@ -44,7 +44,7 @@ public class UserController {
 
   private final UserService service;
 
-  public final ConversionService conversionService;
+  private final ConversionService conversionService;
 
   private final Bucket bucket;
 

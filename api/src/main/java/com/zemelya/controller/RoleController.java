@@ -39,7 +39,9 @@ public class RoleController {
 
   private final RoleService service;
 
-  public final ConversionService conversionService;
+  private final ConversionService conversionService;
+
+  private Integer roleId;
 
   @PostMapping()
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
@@ -63,7 +65,7 @@ public class RoleController {
     return new ResponseEntity<>(model, HttpStatus.CREATED);
   }
 
-  @PostMapping("/update")
+  @PostMapping("/update{id}")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
@@ -72,8 +74,17 @@ public class RoleController {
       required = true,
       content = @Content(schema = @Schema(implementation = RoleChangeRequest.class)))
   public ResponseEntity<Object> updateRole(
+      @PathVariable String id,
       @Valid @org.springframework.web.bind.annotation.RequestBody
           RoleChangeRequest roleChangeRequest) {
+
+    try {
+      roleId = Integer.parseInt(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid role ID");
+    }
+
+    roleChangeRequest.setId(roleId);
 
     HibernateRole hibernateRole = conversionService.convert(roleChangeRequest, HibernateRole.class);
 
@@ -92,12 +103,12 @@ public class RoleController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteRole(@PathVariable String id) {
 
-    Integer roleId;
     try {
       roleId = Integer.parseInt(id);
     } catch (NumberFormatException e) {
       throw new NumberFormatException("Invalid role ID");
     }
+
     HibernateRole hibernateRole = service.delete(roleId);
 
     Map<String, Object> model = new HashMap<>();
@@ -140,7 +151,7 @@ public class RoleController {
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> findById(@PathVariable String id) {
-    Integer roleId;
+
     try {
       roleId = Integer.parseInt(id);
     } catch (NumberFormatException e) {

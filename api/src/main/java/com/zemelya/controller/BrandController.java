@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,42 +27,42 @@ import java.util.Collections;
 @Tag(name = "Brand controller")
 public class BrandController {
 
-    private final BrandService service;
+  private final BrandService service;
 
-    public final ConversionService conversionService;
+  private Integer brandId;
 
-    @GetMapping("/findAllPageable")
-    @Parameter(
-            in = ParameterIn.QUERY,
-            description =
-                    "Sorting criteria in the format: property(,asc|desc). "
-                            + "Default sort order is ascending. "
-                            + "Multiple sort criteria are supported.",
-            name = "sort",
-            array = @ArraySchema(schema = @Schema(type = "string")))
-    public ResponseEntity<Object> findAllPageable(@ParameterObject Pageable pageable) {
+  @GetMapping("/findAllPageable")
+  @Parameter(
+      in = ParameterIn.QUERY,
+      description =
+          "Sorting criteria in the format: property(,asc|desc). "
+              + "Default sort order is ascending. "
+              + "Multiple sort criteria are supported.",
+      name = "sort",
+      array = @ArraySchema(schema = @Schema(type = "string")))
+  public ResponseEntity<Object> findAllPageable(
+      @ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
 
-        return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
+    return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
+  }
+
+  @GetMapping("/findById{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<Object> findById(@PathVariable String id) {
+
+    try {
+      brandId = Integer.parseInt(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid brand ID");
     }
 
-    @GetMapping("/findById{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> findById(@PathVariable String id) {
-        Integer brandId;
-        try {
-            brandId = Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("Invalid brand ID");
-        }
+    return new ResponseEntity<>(
+        Collections.singletonMap("result", service.findById(brandId)), HttpStatus.OK);
+  }
 
-        return new ResponseEntity<>(
-                Collections.singletonMap("result", service.findById(brandId)), HttpStatus.OK);
-    }
+  @GetMapping("/findAll")
+  public ResponseEntity<Object> findAll() {
 
-    @GetMapping("/findAll")
-    public ResponseEntity<Object> findAll() {
-
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
-    }
-
+    return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+  }
 }

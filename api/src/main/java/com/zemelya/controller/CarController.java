@@ -9,8 +9,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +30,7 @@ public class CarController {
 
   private final CarService service;
 
-  public final ConversionService conversionService;
+  private Long carId;
 
   @GetMapping("/findAllPageable")
   @Parameter(
@@ -41,7 +41,8 @@ public class CarController {
               + "Multiple sort criteria are supported.",
       name = "sort",
       array = @ArraySchema(schema = @Schema(type = "string")))
-  public ResponseEntity<Object> findAllPageable(@ParameterObject Pageable pageable) {
+  public ResponseEntity<Object> findAllPageable(
+      @ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
 
     return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
   }
@@ -49,7 +50,7 @@ public class CarController {
   @GetMapping("/findById{id}")
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> findById(@PathVariable String id) {
-    Long carId;
+
     try {
       carId = Long.parseLong(id);
     } catch (NumberFormatException e) {
@@ -77,15 +78,21 @@ public class CarController {
 
   @GetMapping("/showTopPopularCars{selectedLimit}")
   @Operation(description = "Shows top popular cars among the users.")
-  @Parameter(in = ParameterIn.PATH, name = "selectedLimit", required = true, example = "1", description = "How many cars will be shown.")
+  @Parameter(
+      in = ParameterIn.PATH,
+      name = "selectedLimit",
+      required = true,
+      example = "1",
+      description = "How many cars will be shown.")
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> showTopPopularCars(@PathVariable String selectedLimit) {
+
     Integer selectedLimitInt;
-    try{
+
+    try {
       selectedLimitInt = Integer.parseInt(selectedLimit);
-    }
-    catch(NumberFormatException e) {
-            throw new NumberFormatException("Incorrect limit");
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Incorrect limit");
     }
     return new ResponseEntity<>(service.showTopPopularCars(selectedLimitInt), HttpStatus.OK);
   }

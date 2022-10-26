@@ -38,6 +38,7 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,7 +76,21 @@ public class AdminController {
 
   private final RentalAgreementService rentalAgreementService;
 
-  @PostMapping("/users/update")
+  private Long userId;
+
+  private Integer bodyTypeId;
+
+  private Integer brandId;
+
+  private Long drivingLicenseId;
+
+  private Integer modelId;
+
+  private Long carId;
+
+  private Long rentalAgreementId;
+
+  @PostMapping("/users/update{id}")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
@@ -84,8 +99,17 @@ public class AdminController {
       required = true,
       content = @Content(schema = @Schema(implementation = UserChangeRequest.class)))
   public ResponseEntity<Object> updateUser(
+      @PathVariable String id,
       @Valid @org.springframework.web.bind.annotation.RequestBody
           UserChangeRequest userChangeRequest) {
+
+    try {
+      userId = Long.parseLong(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid user ID");
+    }
+
+    userChangeRequest.setId(userId);
 
     HibernateUser hibernateUser = conversionService.convert(userChangeRequest, HibernateUser.class);
 
@@ -104,7 +128,6 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteUser(@PathVariable String id) {
 
-    Long userId;
     try {
       userId = Long.parseLong(id);
     } catch (NumberFormatException e) {
@@ -129,7 +152,8 @@ public class AdminController {
               + "Multiple sort criteria are supported.",
       name = "sort",
       array = @ArraySchema(schema = @Schema(type = "string")))
-  public ResponseEntity<Object> findAllPageable(@ParameterObject Pageable pageable) {
+  public ResponseEntity<Object> findAllPageable(
+      @ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
 
     return new ResponseEntity<>(userService.findAll(pageable), HttpStatus.OK);
   }
@@ -145,7 +169,7 @@ public class AdminController {
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> findById(@PathVariable String id) {
-    Long userId;
+
     try {
       userId = Long.parseLong(id);
     } catch (NumberFormatException e) {
@@ -178,7 +202,7 @@ public class AdminController {
     return new ResponseEntity<>(model, HttpStatus.CREATED);
   }
 
-  @PostMapping("/bodyTypes/update")
+  @PostMapping("/bodyTypes/update{id}")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
@@ -187,8 +211,17 @@ public class AdminController {
       required = true,
       content = @Content(schema = @Schema(implementation = BodyTypeChangeRequest.class)))
   public ResponseEntity<Object> updateBodyType(
+      @PathVariable String id,
       @Valid @org.springframework.web.bind.annotation.RequestBody
           BodyTypeChangeRequest bodyTypeChangeRequest) {
+
+    try {
+      bodyTypeId = Integer.parseInt(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid body type ID");
+    }
+
+    bodyTypeChangeRequest.setId(bodyTypeId);
 
     HibernateBodyType hibernateBodyType =
         conversionService.convert(bodyTypeChangeRequest, HibernateBodyType.class);
@@ -208,12 +241,12 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteBodyType(@PathVariable String id) {
 
-    Integer bodyTypeId;
     try {
       bodyTypeId = Integer.parseInt(id);
     } catch (NumberFormatException e) {
       throw new NumberFormatException("Invalid body type ID");
     }
+
     HibernateBodyType hibernateBodyType = bodyTypeService.delete(bodyTypeId);
 
     Map<String, Object> model = new HashMap<>();
@@ -252,7 +285,7 @@ public class AdminController {
     return new ResponseEntity<>(model, HttpStatus.CREATED);
   }
 
-  @PostMapping("/brands/update")
+  @PostMapping("/brands/update{id}")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
@@ -261,8 +294,17 @@ public class AdminController {
       required = true,
       content = @Content(schema = @Schema(implementation = BrandChangeRequest.class)))
   public ResponseEntity<Object> updateBrand(
+      @PathVariable String id,
       @Valid @org.springframework.web.bind.annotation.RequestBody
           BrandChangeRequest brandChangeRequest) {
+
+    try {
+      brandId = Integer.parseInt(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid brand ID");
+    }
+
+    brandChangeRequest.setId(brandId);
 
     HibernateBrand hibernateBrand =
         conversionService.convert(brandChangeRequest, HibernateBrand.class);
@@ -282,12 +324,12 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteBrand(@PathVariable String id) {
 
-    Integer brandId;
     try {
       brandId = Integer.parseInt(id);
     } catch (NumberFormatException e) {
       throw new NumberFormatException("Invalid brand ID");
     }
+
     HibernateBrand hibernateBrand = brandService.delete(brandId);
 
     Map<String, Object> model = new HashMap<>();
@@ -296,7 +338,7 @@ public class AdminController {
     return new ResponseEntity<>(model, HttpStatus.OK);
   }
 
-  @PostMapping("/drivingLicenses/update")
+  @PostMapping("/drivingLicenses/update{id}")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
@@ -305,8 +347,17 @@ public class AdminController {
       required = true,
       content = @Content(schema = @Schema(implementation = DrivingLicenseChangeRequest.class)))
   public ResponseEntity<Object> updateDrivingLicense(
+      @PathVariable String id,
       @Valid @org.springframework.web.bind.annotation.RequestBody
           DrivingLicenseChangeRequest drivingLicenseChangeRequest) {
+
+    try {
+      drivingLicenseId = Long.parseLong(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid driving license ID");
+    }
+
+    drivingLicenseChangeRequest.setId(drivingLicenseId);
 
     HibernateDrivingLicense drivingLicense =
         conversionService.convert(drivingLicenseChangeRequest, HibernateDrivingLicense.class);
@@ -327,7 +378,6 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteDrivingLicense(@PathVariable String id) {
 
-    Long drivingLicenseId;
     try {
       drivingLicenseId = Long.parseLong(id);
     } catch (NumberFormatException e) {
@@ -352,7 +402,8 @@ public class AdminController {
               + "Multiple sort criteria are supported.",
       name = "sort",
       array = @ArraySchema(schema = @Schema(type = "string")))
-  public ResponseEntity<Object> findAllDrivingLicensesPageable(@ParameterObject Pageable pageable) {
+  public ResponseEntity<Object> findAllDrivingLicensesPageable(
+      @ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
 
     return new ResponseEntity<>(drivingLicenseService.findAll(pageable), HttpStatus.OK);
   }
@@ -368,7 +419,7 @@ public class AdminController {
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> findByDrivingLicenseId(@PathVariable String id) {
-    Long drivingLicenseId;
+
     try {
       drivingLicenseId = Long.parseLong(id);
     } catch (NumberFormatException e) {
@@ -402,7 +453,7 @@ public class AdminController {
     return new ResponseEntity<>(model, HttpStatus.CREATED);
   }
 
-  @PostMapping("/models/update")
+  @PostMapping("/models/update{id}")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
@@ -411,8 +462,17 @@ public class AdminController {
       required = true,
       content = @Content(schema = @Schema(implementation = ModelChangeRequest.class)))
   public ResponseEntity<Object> updateModel(
+      @PathVariable String id,
       @Valid @org.springframework.web.bind.annotation.RequestBody
           ModelChangeRequest modelChangeRequest) {
+
+    try {
+      modelId = Integer.parseInt(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid model ID");
+    }
+
+    modelChangeRequest.setId(modelId);
 
     HibernateModel hibernateModel =
         conversionService.convert(modelChangeRequest, HibernateModel.class);
@@ -432,12 +492,12 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteModel(@PathVariable String id) {
 
-    Integer modelId;
     try {
       modelId = Integer.parseInt(id);
     } catch (NumberFormatException e) {
       throw new NumberFormatException("Invalid model ID");
     }
+
     HibernateModel hibernateModel = modelService.delete(modelId);
 
     Map<String, Object> model = new HashMap<>();
@@ -475,7 +535,7 @@ public class AdminController {
     return new ResponseEntity<>(model, HttpStatus.CREATED);
   }
 
-  @PostMapping("/cars/update")
+  @PostMapping("/cars/update{id}")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
@@ -484,8 +544,17 @@ public class AdminController {
       required = true,
       content = @Content(schema = @Schema(implementation = CarChangeRequest.class)))
   public ResponseEntity<Object> updateCar(
+      @PathVariable String id,
       @Valid @org.springframework.web.bind.annotation.RequestBody
           CarChangeRequest carChangeRequest) {
+
+    try {
+      carId = Long.parseLong(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid car ID");
+    }
+
+    carChangeRequest.setId(carId);
 
     HibernateCar hibernateCar = conversionService.convert(carChangeRequest, HibernateCar.class);
 
@@ -504,7 +573,6 @@ public class AdminController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> deleteCar(@PathVariable String id) {
 
-    Long carId;
     try {
       carId = Long.parseLong(id);
     } catch (NumberFormatException e) {
@@ -548,7 +616,7 @@ public class AdminController {
     return new ResponseEntity<>(model, HttpStatus.CREATED);
   }
 
-  @PostMapping("/rentalAgreements/update")
+  @PostMapping("/rentalAgreements/update{id}")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
@@ -556,9 +624,17 @@ public class AdminController {
       description = "This method allows update the rental agreement in DataBase.",
       required = true,
       content = @Content(schema = @Schema(implementation = RentalAgreementChangeRequest.class)))
-  public ResponseEntity<Object> updateRentalAgreement(
+  public ResponseEntity<Object> updateRentalAgreement(@PathVariable String id,
       @Valid @org.springframework.web.bind.annotation.RequestBody
           RentalAgreementChangeRequest rentalAgreementChangeRequest) {
+
+    try {
+      rentalAgreementId = Long.parseLong(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid rental agreement ID");
+    }
+
+    rentalAgreementChangeRequest.setId(rentalAgreementId);
 
     HibernateRentalAgreement rentalAgreement =
         conversionService.convert(rentalAgreementChangeRequest, HibernateRentalAgreement.class);
@@ -580,8 +656,9 @@ public class AdminController {
 
   @GetMapping("/rentalAgreements/findById{id}")
   @ResponseStatus(HttpStatus.OK)
-  public ResponseEntity<Object> rentalAgreementServiceFindByIdRentalAgreement(@PathVariable String id) {
-    Long rentalAgreementId;
+  public ResponseEntity<Object> rentalAgreementServiceFindByIdRentalAgreement(
+      @PathVariable String id) {
+
     try {
       rentalAgreementId = Long.parseLong(id);
     } catch (NumberFormatException e) {
@@ -589,19 +666,21 @@ public class AdminController {
     }
 
     return new ResponseEntity<>(
-            Collections.singletonMap("result", rentalAgreementService.findById(rentalAgreementId)), HttpStatus.OK);
+        Collections.singletonMap("result", rentalAgreementService.findById(rentalAgreementId)),
+        HttpStatus.OK);
   }
 
   @GetMapping("/rentalAgreements/findAllPageable")
   @Parameter(
-          in = ParameterIn.QUERY,
-          description =
-                  "Sorting criteria in the format: property(,asc|desc). "
-                          + "Default sort order is ascending. "
-                          + "Multiple sort criteria are supported.",
-          name = "sort",
-          array = @ArraySchema(schema = @Schema(type = "string")))
-  public ResponseEntity<Object> rentalAgreementServiceFFindAllPageable(@ParameterObject Pageable pageable) {
+      in = ParameterIn.QUERY,
+      description =
+          "Sorting criteria in the format: property(,asc|desc). "
+              + "Default sort order is ascending. "
+              + "Multiple sort criteria are supported.",
+      name = "sort",
+      array = @ArraySchema(schema = @Schema(type = "string")))
+  public ResponseEntity<Object> rentalAgreementServiceFFindAllPageable(
+      @ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
 
     return new ResponseEntity<>(rentalAgreementService.findAll(pageable), HttpStatus.OK);
   }

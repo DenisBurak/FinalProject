@@ -43,7 +43,7 @@ public class DrivingLicensesController {
 
   private final DrivingLicenseService service;
 
-  public final ConversionService conversionService;
+  private final ConversionService conversionService;
 
   @GetMapping("/show")
   @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
@@ -78,6 +78,7 @@ public class DrivingLicensesController {
     if (result.isPresent()) {
 
       Long userId = result.get().getId();
+
       if(service.findByUserId(userId) != null){
         throw new NumberFormatException("Driving license for current user is existed.");
       }

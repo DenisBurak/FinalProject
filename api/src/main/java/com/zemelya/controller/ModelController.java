@@ -1,6 +1,5 @@
 package com.zemelya.controller;
 
-import com.zemelya.service.bodyType.BodyTypeService;
 import com.zemelya.service.model.ModelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,42 +28,45 @@ import java.util.Collections;
 @Tag(name = "Model controller")
 public class ModelController {
 
-    private final ModelService service;
+  private final ModelService service;
 
-    public final ConversionService conversionService;
+  private final ConversionService conversionService;
 
-    @GetMapping("/findAllPageable")
-    @Parameter(
-            in = ParameterIn.QUERY,
-            description =
-                    "Sorting criteria in the format: property(,asc|desc). "
-                            + "Default sort order is ascending. "
-                            + "Multiple sort criteria are supported.",
-            name = "sort",
-            array = @ArraySchema(schema = @Schema(type = "string")))
-    public ResponseEntity<Object> findAllPageable(@ParameterObject Pageable pageable) {
+  private Integer modelId;
 
-        return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
+  @GetMapping("/findAllPageable")
+  @Parameter(
+      in = ParameterIn.QUERY,
+      description =
+          "Sorting criteria in the format: property(,asc|desc). "
+              + "Default sort order is ascending. "
+              + "Multiple sort criteria are supported.",
+      name = "sort",
+      array = @ArraySchema(schema = @Schema(type = "string")))
+  public ResponseEntity<Object> findAllPageable(
+      @ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
+
+    return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
+  }
+
+  @GetMapping("/findById{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<Object> findById(@PathVariable String id) {
+
+    try {
+      modelId = Integer.parseInt(id);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Invalid model ID");
     }
 
-    @GetMapping("/findById{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> findById(@PathVariable String id) {
-        Integer modelId = 0;
-        try {
-            modelId = Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("Invalid model ID");
-        }
+    return new ResponseEntity<>(
+        Collections.singletonMap("result", service.findById(modelId)), HttpStatus.OK);
+  }
 
-        return new ResponseEntity<>(
-                Collections.singletonMap("result", service.findById(modelId)), HttpStatus.OK);
-    }
+  @GetMapping("/showModels")
+  @Operation(description = "Shows models without extra information")
+  public ResponseEntity<Object> findOnlyModels() {
 
-    @GetMapping("/showModels")
-    @Operation(description = "Shows models without extra information")
-    public ResponseEntity<Object> findOnlyModels() {
-
-        return new ResponseEntity<>(service.findOnlyModels(), HttpStatus.OK);
-    }
+    return new ResponseEntity<>(service.findOnlyModels(), HttpStatus.OK);
+  }
 }
