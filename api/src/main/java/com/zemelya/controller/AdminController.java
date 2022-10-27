@@ -54,6 +54,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.zemelya.security.CustomHeaders.X_AUTH_TOKEN;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
@@ -91,7 +93,7 @@ public class AdminController {
   private Long rentalAgreementId;
 
   @PostMapping("/users/update{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
@@ -122,7 +124,7 @@ public class AdminController {
   }
 
   @PostMapping("/users/delete{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @Operation(description = "This method allows deactivate the user in DataBase by ID")
   @ResponseStatus(HttpStatus.OK)
@@ -143,7 +145,7 @@ public class AdminController {
   }
 
   @GetMapping("/users/findAllPageable")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Parameter(
       in = ParameterIn.QUERY,
       description =
@@ -159,7 +161,7 @@ public class AdminController {
   }
 
   @GetMapping("/users/findAll")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   public ResponseEntity<Object> findAllUsers() {
 
     return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
@@ -180,7 +182,7 @@ public class AdminController {
   }
 
   @PostMapping("/bodyTypes/create")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.CREATED)
   @RequestBody(
@@ -203,7 +205,7 @@ public class AdminController {
   }
 
   @PostMapping("/bodyTypes/update{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
@@ -235,7 +237,7 @@ public class AdminController {
   }
 
   @PostMapping("/bodyTypes/delete{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @Operation(description = "This method allows deactivate the body type in DataBase")
   @ResponseStatus(HttpStatus.OK)
@@ -256,14 +258,14 @@ public class AdminController {
   }
 
   @GetMapping("/bodyTypes/findAll")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   public ResponseEntity<Object> findAllBodyTypes() {
 
     return new ResponseEntity<>(bodyTypeService.findAll(), HttpStatus.OK);
   }
 
   @PostMapping("/brands/create")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.CREATED)
   @RequestBody(
@@ -286,7 +288,7 @@ public class AdminController {
   }
 
   @PostMapping("/brands/update{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
@@ -318,7 +320,7 @@ public class AdminController {
   }
 
   @PostMapping("/brands/delete{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @Operation(description = "This method allows deactivate the brand type in DataBase")
   @ResponseStatus(HttpStatus.OK)
@@ -339,7 +341,7 @@ public class AdminController {
   }
 
   @PostMapping("/drivingLicenses/update{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
@@ -371,7 +373,7 @@ public class AdminController {
   }
 
   @PostMapping("/drivingLicenses/delete{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @Operation(
       description = "This method allows deactivate the user's driving license in DataBase by ID")
@@ -393,7 +395,7 @@ public class AdminController {
   }
 
   @GetMapping("/drivingLicenses/findAllPageable")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Parameter(
       in = ParameterIn.QUERY,
       description =
@@ -409,14 +411,14 @@ public class AdminController {
   }
 
   @GetMapping("/drivingLicenses/findAll")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   public ResponseEntity<Object> findAllDrivingLicenses() {
 
     return new ResponseEntity<>(drivingLicenseService.findAll(), HttpStatus.OK);
   }
 
   @GetMapping("/drivingLicenses/findById{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> findByDrivingLicenseId(@PathVariable String id) {
 
@@ -431,7 +433,7 @@ public class AdminController {
   }
 
   @PostMapping("/models/create")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.CREATED)
   @RequestBody(
@@ -454,7 +456,7 @@ public class AdminController {
   }
 
   @PostMapping("/models/update{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
@@ -486,7 +488,7 @@ public class AdminController {
   }
 
   @PostMapping("/models/delete{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @Operation(description = "This method allows deactivate the model in DataBase")
   @ResponseStatus(HttpStatus.OK)
@@ -507,14 +509,14 @@ public class AdminController {
   }
 
   @GetMapping("/models/findAll")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   public ResponseEntity<Object> findAllModels() {
 
     return new ResponseEntity<>(modelService.findAll(), HttpStatus.OK);
   }
 
   @PostMapping("/cars/create")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.CREATED)
   @RequestBody(
@@ -536,7 +538,7 @@ public class AdminController {
   }
 
   @PostMapping("/cars/update{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
@@ -567,7 +569,7 @@ public class AdminController {
   }
 
   @PostMapping("/cars/delete{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @Operation(description = "This method allows deactivate the car in DataBase")
   @ResponseStatus(HttpStatus.OK)
@@ -587,14 +589,14 @@ public class AdminController {
   }
 
   @GetMapping("/cars/findAll")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   public ResponseEntity<Object> findAllCars() {
 
     return new ResponseEntity<>(carService.findAll(), HttpStatus.OK);
   }
 
   @PostMapping("/rentalAgreements/create")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.CREATED)
   @RequestBody(
@@ -617,14 +619,15 @@ public class AdminController {
   }
 
   @PostMapping("/rentalAgreements/update{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
       description = "This method allows update the rental agreement in DataBase.",
       required = true,
       content = @Content(schema = @Schema(implementation = RentalAgreementChangeRequest.class)))
-  public ResponseEntity<Object> updateRentalAgreement(@PathVariable String id,
+  public ResponseEntity<Object> updateRentalAgreement(
+      @PathVariable String id,
       @Valid @org.springframework.web.bind.annotation.RequestBody
           RentalAgreementChangeRequest rentalAgreementChangeRequest) {
 
@@ -648,7 +651,7 @@ public class AdminController {
   }
 
   @GetMapping("/rentalAgreements/findAll")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   public ResponseEntity<Object> findAllRentalAgreements() {
 
     return new ResponseEntity<>(rentalAgreementService.findAll(), HttpStatus.OK);

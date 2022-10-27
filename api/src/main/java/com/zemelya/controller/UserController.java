@@ -34,6 +34,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.zemelya.security.CustomHeaders.X_AUTH_TOKEN;
+
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "User controller")
@@ -49,7 +51,7 @@ public class UserController {
   private final Bucket bucket;
 
   @GetMapping("/profile")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @ResponseStatus(HttpStatus.OK)
   public HibernateUser showProfile(Principal principal) {
     String username = PrincipalUtil.getUsername(principal);
@@ -90,7 +92,7 @@ public class UserController {
   }
 
   @PostMapping("/update")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
@@ -128,7 +130,7 @@ public class UserController {
   }
 
   @PostMapping("/delete")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @Operation(description = "This method allows deactivate the user in DataBase")
   @ResponseStatus(HttpStatus.OK)

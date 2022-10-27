@@ -31,6 +31,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.zemelya.security.CustomHeaders.X_AUTH_TOKEN;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/roles")
@@ -44,7 +46,7 @@ public class RoleController {
   private Integer roleId;
 
   @PostMapping()
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.CREATED)
   @RequestBody(
@@ -66,7 +68,7 @@ public class RoleController {
   }
 
   @PostMapping("/update{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
@@ -97,7 +99,7 @@ public class RoleController {
   }
 
   @PostMapping("/delete{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @Operation(description = "This method allows deactivate the role in DataBase")
   @ResponseStatus(HttpStatus.OK)
@@ -118,7 +120,7 @@ public class RoleController {
   }
 
   @GetMapping("/findAllPageable")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Parameter(
       in = ParameterIn.QUERY,
       description =
@@ -133,7 +135,7 @@ public class RoleController {
   }
 
   @GetMapping("/findAll")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   public ResponseEntity<Object> findAll() {
 
     return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
@@ -148,7 +150,7 @@ public class RoleController {
   }
 
   @GetMapping("/findById{id}")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<Object> findById(@PathVariable String id) {
 

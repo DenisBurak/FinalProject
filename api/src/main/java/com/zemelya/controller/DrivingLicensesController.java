@@ -4,7 +4,6 @@ import com.zemelya.controller.request.drivingLicenses.DrivingLicenseChangeReques
 import com.zemelya.controller.request.drivingLicenses.DrivingLicenseCreateRequest;
 import com.zemelya.domain.hibernate.HibernateDrivingLicense;
 import com.zemelya.domain.hibernate.HibernateUser;
-import com.zemelya.repository.drivingLicenses.DrivingLicensesSpringDataRepository;
 import com.zemelya.repository.user.UserSpringDataRepository;
 import com.zemelya.security.util.PrincipalUtil;
 import com.zemelya.service.drivingLicense.DrivingLicenseService;
@@ -33,6 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.zemelya.security.CustomHeaders.X_AUTH_TOKEN;
+
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Driving license controller")
@@ -46,7 +47,7 @@ public class DrivingLicensesController {
   private final ConversionService conversionService;
 
   @GetMapping("/show")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @ResponseStatus(HttpStatus.OK)
   public HibernateDrivingLicense showDrivingLicense(Principal principal) {
     String username = PrincipalUtil.getUsername(principal);
@@ -60,7 +61,7 @@ public class DrivingLicensesController {
   }
 
   @PostMapping()
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.CREATED)
   @RequestBody(
@@ -79,7 +80,7 @@ public class DrivingLicensesController {
 
       Long userId = result.get().getId();
 
-      if(service.findByUserId(userId) != null){
+      if (service.findByUserId(userId) != null) {
         throw new NumberFormatException("Driving license for current user is existed.");
       }
 
@@ -100,7 +101,7 @@ public class DrivingLicensesController {
   }
 
   @PostMapping("/update")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @ResponseStatus(HttpStatus.OK)
   @RequestBody(
@@ -140,7 +141,7 @@ public class DrivingLicensesController {
   }
 
   @PostMapping("/delete")
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true)
+  @Parameter(in = ParameterIn.HEADER, name = X_AUTH_TOKEN, required = true)
   @Transactional
   @Operation(description = "This method allows deactivate the user's driving license in DataBase")
   @ResponseStatus(HttpStatus.OK)
